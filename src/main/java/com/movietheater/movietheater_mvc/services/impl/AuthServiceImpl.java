@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.movietheater.movietheater_mvc.dtos.auth.RegisterDTO;
 import com.movietheater.movietheater_mvc.entities.Account;
-import com.movietheater.movietheater_mvc.entities.Role;
 import com.movietheater.movietheater_mvc.repositories.AccountRepository;
 import com.movietheater.movietheater_mvc.repositories.RoleRepository;
 import com.movietheater.movietheater_mvc.services.AuthService;

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{shared/layouts/adminLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="manager p-4">
+        <!-- Card search -->
+        <div class="form-search card border border-slate-300 rounded-md mb-4">
+            <div class="card-header p-3">
+                <h1>Employee Management</h1>
+            </div>
+            <form th:action="@{/manage/employees}" method="get">
+                <div class="card-body border-y border-slate-300 p-3">
+                    <div class="form-group mb-3">
+                        <label for="keyword" class="block mb-2">Keyword</label>
+                        <input type="text" name="keyword" id="keyword"
+                            class="form-control w-full p-2 border border-slate-300 rounded-md"
+                            placeholder="Search by keyword" th:value="${keyword}">
+                    </div>
+                </div>
+                <div class="card-footer p-3 flex justify-between">
+                    <a th:href="@{/manage/employees/create}"
+                        class="p-2 px-4 bg-green-500 text-white rounded-full">Create</a>
+                    <button type="submit" class="p-2 px-4 bg-blue-500 text-white rounded-full">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card List -->
+        <div class="card border border-slate-300 rounded-md">
+            <div class="card-body p-3 border-y border-slate-300">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr class="*:p-2 *:text-left *:border *:border-slate-300">
+                            <th>User Name</th>
+                            <th>Full Name</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                            <th>
+                                    Email
+                            </th>
+                            <th>Identity Card</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="employee : ${employees}" class="*:p-2 *:text-left *:border *:border-slate-300">
+                            <td th:text="${employee.username}">User Name</td>
+                            <td th:text="${employee.fullName}">Full Name</td>
+                           
+                            <td th:text="${#temporals.format(employee.dateOfBirth, 'MM/dd/yyyy')}">12/12/2022 12:00</td>
+                            <td th:text="${employee.gender}">Gender</td>
+                            <td th:text="${employee.email}">Email</td>
+                            <td th:text="${employee.identityCard}">Identity Card</td>
+                           
+                            <td th:text="${employee.phoneNumber}">Phone</td>
+                            <td th:text="${employee.address}">Address</td>
+                            <td>
+                                <div class="action flex justify-center items-center gap-3">
+                                    <a th:href="@{/manage/employees/edit/{id}(id=${employee.id})}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fa-solid fa-edit text-blue-500"></i>
+                                    </a>
+                                    <a th:href="@{/manage/employees/delete/{id}(id=${employee.id})}"
+                                        class="btn btn-sm btn-danger">
+                                        <i class="fa-solid fa-trash text-red-500"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+    </section>
+</body>
+
+</html>
