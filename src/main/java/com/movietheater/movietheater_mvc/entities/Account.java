@@ -1,5 +1,6 @@
 package com.movietheater.movietheater_mvc.entities;
 
+import java.util.Collections;
 import java.util.Set;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -67,5 +68,13 @@ public class Account {
 
     @OneToMany(mappedBy = "account")
     private Set<Invoice> invoices;
+    
+    public Set<Role> getRoles() {
+        return Collections.singleton(role);
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.role = roles.iterator().next();
+    }
     
 }
