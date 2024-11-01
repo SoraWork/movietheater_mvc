@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 public interface EmployeeService {
     List<EmployeeDTO> findAll();
 
+    Page<EmployeeDTO> findAll(Pageable pageable);
+
     Page<EmployeeDTO> findAll(String keyword, Pageable pageable);
 
     EmployeeDTO findById(UUID id);
@@ -23,4 +25,8 @@ public interface EmployeeService {
     boolean deleteById(UUID id);
 
     boolean existsByUsername(String username); 
+
+    boolean existsByEmail(String username); 
+
+    boolean existsByIdentityCard(String username); 
 }

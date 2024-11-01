@@ -42,9 +42,7 @@
                             <th>Full Name</th>
                             <th>Date of Birth</th>
                             <th>Gender</th>
-                            <th>
-                                    Email
-                            </th>
+                            <th>Email</th>
                             <th>Identity Card</th>
                             <th>Phone</th>
                             <th>Address</th>
@@ -55,12 +53,10 @@
                         <tr th:each="employee : ${employees}" class="*:p-2 *:text-left *:border *:border-slate-300">
                             <td th:text="${employee.username}">User Name</td>
                             <td th:text="${employee.fullName}">Full Name</td>
-                           
                             <td th:text="${#temporals.format(employee.dateOfBirth, 'MM/dd/yyyy')}">12/12/2022 12:00</td>
                             <td th:text="${employee.gender}">Gender</td>
                             <td th:text="${employee.email}">Email</td>
                             <td th:text="${employee.identityCard}">Identity Card</td>
-                           
                             <td th:text="${employee.phoneNumber}">Phone</td>
                             <td th:text="${employee.address}">Address</td>
                             <td>
@@ -80,6 +76,84 @@
                 </table>
             </div>
 
+            <div class="card-footer pagination p-3 flex justify-between items-center">
+                <!-- Select page size -->
+                <div class="select-size">
+                    <label for="pageSize" class="text-sm font-medium text-gray-700 mb-2">Page Size:</label>
+                    <!-- Select size - keep keyword and reset page to page 1 -->
+                    <select id="pageSize" name="pageSize" class="p-2 border border-slate-300 rounded-md"
+                        onchange="window.location.href = '/manage/employees?keyword=' + document.getElementById('keyword').value + '&sortBy=name&order=asc&page=0&size=' + this.value">
+                        <option th:each="size : ${pageSizes}" th:value="${size}" th:text="${size}"
+                            th:selected="${size == pageSize}"></option>
+                    </select>
+                </div>
+                <!-- Pagination -->
+                <ul class="page-menu flex justify-center items-center gap-2">
+                    <li class="page-item">
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="0 == ${page} ? 'pointer-events-none !bg-slate-200 text-slate-400' : ''"
+                            th:href="@{/manage/employees(keyword=${keyword}, sortBy=${sortBy}, order=${order}, page=0, size=${pageSize})}">
+                            <i class="fa-solid fa-angle-double-left"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(page - pageLimit < 0 ? 0 : page - pageLimit,  totalPages - 1 - page >= pageLimit ? page + pageLimit  : totalPages - 1)}">
+                        <!-- Page i and size 2 -->
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="${i} == ${page} ? '!bg-blue-500 text-white' : ''"
+                            th:href="@{/manage/employees(keyword=${keyword}, sortBy=${sortBy}, order=${order}, page=${i}, size=${pageSize})}"
+                            th:text="${i} + 1"></a>
+                    </li>
+
+                    <li class="page-item">
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="${totalPages - 1} == ${page} ? 'pointer-events-none !bg-slate-200 text-slate-400' : ''"
+                            th:href="@{/manage/employees(keyword=${keyword},sortBy=${sortBy}, order=${order}, page=${totalPages - 1}, size=${pageSize})}">
+                            <i class="fa-solid fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Page Info -->
+                <div class="page-info">
+                    <!-- 1-2 of 7 items -->
+                    <span th:text="${page * pageSize + 1}"></span>-
+                    <span
+                        th:text="${(page + 1) * pageSize > totalElements ? totalElements : (page + 1) * pageSize}"></span>
+                    of
+                    <span th:text="${totalElements}"></span>
+                    employees
+                </div>
+            </div>
+        </div>
+        <!-- Popup Message -->
+        <div id="popup"
+            class="fixed top-[64px] right-[20px] bg-white p-4 rounded-md border border-slate-400 shadow-md z-10 transform translate-x-full transition-transform duration-500 ease-in-out hidden">
+            <i th:class="${message.type == 'success'} ? 'fa-solid fa-check-circle text-green-500' : 'fa-solid fa-times-circle text-red-500'"
+                class="absolute top-2 right-2"></i>
+            <span id="popup-message"></span>
+        </div>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            document.addEventListener('DOMContentLoaded', function () {
+                const message = /*[[${message}]]*/ null;
+                if (message !== null && message.content !== null && message.content !== '') {
+                    const popup = document.getElementById('popup');
+                    const popupMessage = document.getElementById('popup-message');
+                    popupMessage.textContent = /*[[${message.content}]]*/ 'Default message';
+                    popup.classList.add(/*[[${message.type} == 'success' ? 'text-green-500' : 'text-red-500']]*/ 'text-green-500');
+                    popup.classList.remove('hidden', 'translate-x-full');
+                    setTimeout(() => {
+                        popup.classList.add('translate-x-full');
+                        setTimeout(() => {
+                            popup.classList.add('hidden');
+                        }, 500); // Wait for the transition to complete before hiding
+                    }, 3000);
+                }
+            });
+            /*]]>*/
+        </script>
     </section>
 </body>
 

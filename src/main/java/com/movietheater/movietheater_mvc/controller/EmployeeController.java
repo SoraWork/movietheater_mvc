@@ -33,64 +33,48 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
-    // @GetMapping
-    // public String index(
-    //         @RequestParam(required = false) String keyword,
-    //         @RequestParam(required = false, defaultValue = "") String sortBy, 
-    //         @RequestParam(required = false, defaultValue = "asc") String order, 
-    //         @RequestParam(required = false, defaultValue = "0") Integer page,
-    //         @RequestParam(required = false, defaultValue = "10") Integer size,
-    //         Model model) {
-    //     Pageable pageable = null;
-
-    //     if (order.equals("asc")) {
-    //         pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-    //     } else {
-    //         pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-    //     }
-
-    //     // Search category by keyword and paging
-    //     var employees = employeeService.findAll(keyword, pageable);
-    //     model.addAttribute("employees", employees);
-
-    //     // Passing keyword to view
-    //     model.addAttribute("keyword", keyword);
-
-    //     // Passing total pages to view
-    //     model.addAttribute("totalPages", employees.getTotalPages());
-
-    //     // Passing total elements to view
-    //     model.addAttribute("totalElements", employees.getTotalElements());
-
-    //     // Passing current sortBy to view
-    //     model.addAttribute("sortBy", sortBy);
-
-    //     // Passing current order to view
-    //     model.addAttribute("order", order);
-
-    //     // Limit page
-    //     model.addAttribute("pageLimit", 3);
-
-    //     // Passing current page to view
-    //     model.addAttribute("page", page);
-
-    //     // Passing current size to view
-    //     model.addAttribute("pageSize", size);
-
-    //     // Passing pageSizes to view
-    //     model.addAttribute("pageSizes", new Integer[] { 10, 20, 30, 50, 100 });
-
-    //     // Get message from redirect
-    //     if (!model.containsAttribute("message")) {
-    //         model.addAttribute("message", new Message());
-    //     }
-    //     return "manage/employees/index";
-    // }
-
     @GetMapping
-    public String index(Model model) {
-        var employees = employeeService.findAll();
+    public String index(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "asc") String order,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "5") Integer size,
+            Model model) {
+    
+        // Xác định phân trang
+        Pageable pageable = PageRequest.of(page, size); // Không cần sắp xếp
+    
+        // Kiểm tra từ khóa và gọi phương thức phù hợp
+        var employees = (keyword == null || keyword.trim().isEmpty()) ?
+                employeeService.findAll(pageable) : // Không có từ khóa -> tìm tất cả
+                employeeService.findAll(keyword, pageable); // Có từ khóa -> tìm kiếm với điều kiện
+    
+        // Thêm danh sách nhân viên vào Model
         model.addAttribute("employees", employees);
+    
+        // Thêm các thuộc tính vào Model để sử dụng trong view
+        // Passing keyword to view
+        model.addAttribute("keyword", keyword);
+        
+        // Passing total pages to view
+        model.addAttribute("totalPages", employees.getTotalPages());
+        // Passing total elements to view
+        model.addAttribute("totalElements", employees.getTotalElements());
+        // Limit page
+        model.addAttribute("pageLimit", 3); 
+        // Passing current page to view
+        model.addAttribute("page", page);
+        // Passing current size to view
+        model.addAttribute("pageSize", size);
+          // Passing pageSizes to view
+        model.addAttribute("pageSizes", new Integer[] {5, 10, 15, 20, 25});
+    
+        // Thêm message vào Model nếu chưa có
+        if (!model.containsAttribute("message")) {
+            model.addAttribute("message", new Message());
+        }
+    
+        // Trả về tên của view
         return "manage/employees/index";
     }
 
@@ -110,7 +94,7 @@ public class EmployeeController {
             Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeCreateDTO", employeeCreateDTO);
-            return "manage/categories/create";
+            return "manage/employees/create";
         }
 
         var result = employeeService.create(employeeCreateDTO);

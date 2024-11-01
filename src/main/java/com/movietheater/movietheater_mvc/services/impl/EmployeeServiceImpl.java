@@ -20,12 +20,13 @@ import com.movietheater.movietheater_mvc.repositories.RoleRepository;
 import com.movietheater.movietheater_mvc.services.EmployeeService;
 
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 
 @Service
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
-     private final AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
@@ -64,31 +65,38 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         @Override
         public Page<EmployeeDTO> findAll(String keyword, Pageable pageable) {
-            Specification<Employee> specification = (root, query, criteriaBuilder) -> {
-                if (keyword == null || keyword.trim().isEmpty()) {
-                    return null;
-                }
-        
-                // Thực hiện Join với bảng Account
-                Join<Employee, Account> accountJoin = root.join("accounts");
-        
-                // Tạo Predicate cho email và identityCard trong bảng Account
-                Predicate emailPredicate = criteriaBuilder.like(
-                    criteriaBuilder.lower(accountJoin.get("email")), "%" + keyword.toLowerCase() + "%"
-                );
-        
-                Predicate identityCardPredicate = criteriaBuilder.like(
-                    criteriaBuilder.lower(accountJoin.get("identityCard")), "%" + keyword.toLowerCase() + "%"
-                );
-        
-                return criteriaBuilder.or(emailPredicate, identityCardPredicate);
-            };
-        
-            var employees = employeeRepository.findAll(specification, pageable);
-            
+            Page<Employee> employees;
+
+            // Kiểm tra nếu từ khóa tìm kiếm rỗng hoặc không tồn tại
+            if (keyword == null || keyword.trim().isEmpty()) {
+                // Thực hiện truy vấn mà không có điều kiện tìm kiếm
+                employees = employeeRepository.findAll(pageable);
+            } else {
+                // Tạo Specification khi có từ khóa tìm kiếm
+                Specification<Employee> specification = (root, query, criteriaBuilder) -> {
+                    // Thực hiện Join với bảng Account
+                    Join<Employee, Account> accountJoin = root.join("account", JoinType.LEFT);
+
+                    // Tạo Predicate cho email và identityCard
+                    Predicate emailPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(accountJoin.get("email")), "%" + keyword.toLowerCase() + "%"
+                    );
+
+                    Predicate identityCardPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(accountJoin.get("identityCard")), "%" + keyword.toLowerCase() + "%"
+                    );
+
+                    // Trả về điều kiện kết hợp OR
+                    return criteriaBuilder.or(emailPredicate, identityCardPredicate);
+                };
+
+                // Thực hiện truy vấn với Specification và phân trang
+                employees = employeeRepository.findAll(specification, pageable);
+            }
+
             // Chuyển đổi Page<Employee> sang Page<EmployeeDTO>
             return employees.map(employee -> {
-                var employeeDTO = new EmployeeDTO();
+                EmployeeDTO employeeDTO = new EmployeeDTO();
                 employeeDTO.setId(employee.getId());
                 employeeDTO.setUsername(employee.getAccount().getUsername());
                 employeeDTO.setFullName(employee.getAccount().getFullName());
@@ -101,8 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 return employeeDTO;
             });
         }
-        
-        
+
 
     @Override
     public EmployeeDTO findById(UUID id) {
@@ -129,16 +136,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDTO create(EmployeeCreateDTO employeeCreateDTO) {
-         // Check if categoryDTO is null then throw exception
+         // Check if employeeCreateDTO is null then throw exception
          if (employeeCreateDTO == null) {
             throw new IllegalArgumentException("EmployeeCreateDTO cannot be null");
         }
-
+        // Check if existingUser is exists then throw exception
         var existingUser = existsByUsername(employeeCreateDTO.getUsername());
         if (existingUser) {
             throw new IllegalArgumentException("Username already exists");
         }
 
+        // Check if email exists in database then throw exception
+        var existingEmail = existsByEmail(employeeCreateDTO.getEmail());
+        if (existingEmail) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        // Check if identityCard exists in database then throw exception
+        var existingIdentityCard = existsByIdentityCard(employeeCreateDTO.getIdentityCard());
+        if (existingIdentityCard) {
+            throw new IllegalArgumentException("IdentityCard already exists");
+        }
         var user = new Account();
         user.setUsername(employeeCreateDTO.getUsername());;
         user.setFullName(employeeCreateDTO.getFullName());
@@ -251,6 +269,39 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean existsByUsername(String username) {
        return employeeRepository.existsByAccount_Username(username);
     }
+
+    @Override
+    public Page<EmployeeDTO> findAll(Pageable pageable) {
+        // Truy vấn tất cả các Employee với phân trang
+        Page<Employee> employees = employeeRepository.findAll(pageable);
+    
+        // Chuyển đổi Page<Employee> thành Page<EmployeeDTO>
+        return employees.map(employee -> {
+            // Tạo một đối tượng EmployeeDTO và thiết lập các thuộc tính
+            EmployeeDTO employeeDTO = new EmployeeDTO();
+            employeeDTO.setId(employee.getId());
+            employeeDTO.setUsername(employee.getAccount().getUsername());
+            employeeDTO.setFullName(employee.getAccount().getFullName());
+            employeeDTO.setDateOfBirth(employee.getAccount().getDateOfBirth());
+            employeeDTO.setGender(employee.getAccount().getGender());
+            employeeDTO.setEmail(employee.getAccount().getEmail());
+            employeeDTO.setIdentityCard(employee.getAccount().getIdentityCard());
+            employeeDTO.setPhoneNumber(employee.getAccount().getPhoneNumber());
+            employeeDTO.setAddress(employee.getAccount().getAddress());
+            return employeeDTO;
+        });
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return employeeRepository.existsByAccount_Email(email);
+    }
+
+    @Override
+    public boolean existsByIdentityCard(String username) {
+        return employeeRepository.existsByAccount_IdentityCard(username);
+    }
+    
 
 
 }
