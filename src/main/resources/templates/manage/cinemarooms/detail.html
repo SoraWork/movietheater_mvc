@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{shared/layouts/adminLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Room Details</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="bg-white shadow-md rounded-lg p-6 max-w-xl mx-auto">
+        <h2 class="text-2xl font-bold text-center mb-6" th:text="'Seat detail: ' + ${cinemaRoom.cinemaRoomName}"></h2>
+
+        <form th:action="@{/manage/cinemarooms/{id}(id=${cinemaRoom.id})}" method="post" id="seatForm">
+            <input type="text" name="selectedSeats" id="selectedSeats" value="" > <!-- Đặt thuộc tính hidden -->
+
+            <div class="flex justify-center">
+                <div class="mr-8">
+                    <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
+                        <!-- Vòng lặp cho các ghế ở cột A, B, C -->
+                        <button type="button" th:each="seat : ${seats}" 
+                            th:if="${seat.seatRow == row && (seat.seatColumn == 'A' || seat.seatColumn == 'B' || seat.seatColumn == 'C')}"
+                            th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
+                            + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')} "
+                            th:text="${seat.seatRow + seat.seatColumn}"
+                            th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
+                            onclick="selectSeat(this)">
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
+                        <!-- Vòng lặp cho các ghế ở cột D, E, F -->
+                        <button type="button" th:each="seat : ${seats}" 
+                            th:if="${seat.seatRow == row && (seat.seatColumn == 'D' || seat.seatColumn == 'E' || seat.seatColumn == 'F')}"
+                            th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
+                            + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')}"
+                            th:text="${seat.seatRow + seat.seatColumn}"
+                            th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
+                            onclick="selectSeat(this)">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Khu vực màn hình -->
+            <div class="text-center font-bold text-gray-700 mt-6 mb-4">Screen</div>
+        
+            <!-- Ghi chú về các loại ghế -->
+            <div class="flex justify-center items-center space-x-4 mb-6">
+                <span class="w-10 h-10 bg-gray-300 rounded-md inline-block"></span> <span>Seat Normal</span>
+                <span class="w-10 h-10 bg-blue-400 rounded-md inline-block"></span> <span>Seat VIP</span>
+            </div>
+        
+            <div class="flex justify-center">
+                <button type="button" onclick="window.history.back()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back</button>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+            </div>
+        </form>
+        
+        <script>
+            function selectSeat(button) {
+                // Kiểm tra xem nút đã được chọn chưa
+                if (button.classList.contains('bg-green-400')) {
+                    // Nếu đã được chọn, bỏ màu xanh lá
+                    button.classList.remove('bg-green-400');
+                    button.classList.add('bg-gray-300'); // Trở lại màu gốc
+                } else {
+                    // Nếu chưa được chọn, thay đổi màu nền thành xanh lá
+                    button.classList.remove('bg-gray-300');
+                    button.classList.add('bg-green-400');
+                }
+                
+                // Lấy thông tin ghế
+                const seatId = button.getAttribute('data-id'); // Lấy ID của ghế
+
+                // Cập nhật giá trị ghế đã chọn
+                updateSelectedSeats(seatId, button.classList.contains('bg-green-400'));
+            }
+
+            function updateSelectedSeats(id, isSelected) {
+                const selectedSeatsInput = document.getElementById('selectedSeats');
+                let selectedSeats = selectedSeatsInput.value.split(',').filter(Boolean); // Lấy danh sách ghế đã chọn
+
+                if (isSelected) {
+                    // Nếu ghế được chọn, thêm vào danh sách
+                    if (!selectedSeats.includes(id)) {
+                        selectedSeats.push(id);
+                    }
+                } else {
+                    // Nếu ghế không còn được chọn, loại bỏ khỏi danh sách
+                    selectedSeats = selectedSeats.filter(seat => seat !== id);
+                }
+
+                // Cập nhật giá trị cho input ẩn
+                selectedSeatsInput.value = selectedSeats.join(',');
+            }
+        </script>
+    </section>
+</body>
+</html>

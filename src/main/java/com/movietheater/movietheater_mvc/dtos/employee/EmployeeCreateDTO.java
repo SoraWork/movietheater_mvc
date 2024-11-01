@@ -1,7 +1,6 @@
 package com.movietheater.movietheater_mvc.dtos.employee;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
 

@@ -32,4 +32,10 @@ public class Seat {
     @JoinColumn(name = "cinema_room_id", referencedColumnName = "id")
     private CinemaRoom cinemaRoom;
 
+    // Constructor cho Seat
+    public Seat(int row, char column) {
+        this.seatRow = row;
+        this.seatColumn = String.valueOf(column); 
+    }
+
 }
