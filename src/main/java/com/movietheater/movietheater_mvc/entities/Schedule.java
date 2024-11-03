@@ -1,6 +1,6 @@
 package com.movietheater.movietheater_mvc.entities;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -17,10 +17,10 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "SCHEDULE_TIMW")
+    @Column(name = "SCHEDULE_TIME")
     private String scheduleTime;
 
     @ManyToMany(mappedBy = "schedules", fetch = FetchType.LAZY)
-    private List<Movie> movies;
+    private Set<Movie> movies;
 
 }

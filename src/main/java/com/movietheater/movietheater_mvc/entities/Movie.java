@@ -20,7 +20,7 @@ public class Movie {
     private String actor;
 
     @Column(name = "CINEMA_ROOM_ID")
-    private int cinemaRoomId;
+    private UUID cinemaRoomId;
 
     @Column(name = "CONTENT")
     private String content;
@@ -54,14 +54,14 @@ public class Movie {
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "movie_schedule", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "schedule_id"))
-    private List<Schedule> schedules;
+    private Set<Schedule> schedules;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "movie_type", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "type_id"))
-    private List<Type> types;
+    private Set<Type> types;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "movie_date", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "show_date_id"))
-    private List<ShowDate> showDates;
+    private Set<ShowDate> showDates;
 
 }

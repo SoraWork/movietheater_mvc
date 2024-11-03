@@ -1,6 +1,6 @@
 package com.movietheater.movietheater_mvc.entities;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -21,6 +21,6 @@ public class Type {
     private String typeName;
 
     @ManyToMany(mappedBy = "types", fetch = FetchType.LAZY)
-    private List<Movie> movies;
+    private Set<Movie> movies;
 
 }

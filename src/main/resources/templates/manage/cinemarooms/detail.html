@@ -13,7 +13,7 @@
         <h2 class="text-2xl font-bold text-center mb-6" th:text="'Seat detail: ' + ${cinemaRoom.cinemaRoomName}"></h2>
 
         <form th:action="@{/manage/cinemarooms/{id}(id=${cinemaRoom.id})}" method="post" id="seatForm">
-            <input type="text" name="selectedSeats" id="selectedSeats" value="" > <!-- Đặt thuộc tính hidden -->
+            <input type="text" name="selectedSeats" id="selectedSeats" value="" hidden> 
 
             <div class="flex justify-center">
                 <div class="mr-8">

@@ -1,6 +1,6 @@
 package com.movietheater.movietheater_mvc.entities;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -26,6 +26,6 @@ public class ShowDate {
     private String dateName;
 
     @ManyToMany(mappedBy = "showDates", fetch = FetchType.LAZY)
-    private List<Movie> movies;
+    private Set<Movie> movies;
 
 }

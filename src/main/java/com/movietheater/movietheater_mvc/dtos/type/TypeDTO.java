@@ -1,5 +1,6 @@
-package com.movietheater.movietheater_mvc.dtos.cinemaroom;
+package com.movietheater.movietheater_mvc.dtos.type;
 
+import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -8,17 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CinemaRoomCreateDTO {
+public class TypeDTO {
+    private UUID id;
 
     @NotBlank
-    @Length(min = 3, max = 50, message = "Cinema room name must be between 3 and 50 characters")
-    private String cinemaRoomName;
-   
-    private int seatQuantity;
+    @Length(min = 2, max = 255, message = "Type name must be between 2 and 255 characters")
+    private String typeName;
 
 }
