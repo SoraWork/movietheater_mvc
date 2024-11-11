@@ -193,8 +193,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeDTO.setPassword(employee.getAccount().getPassword());
 
         return employeeDTO;
-           
-        
         
     }
 

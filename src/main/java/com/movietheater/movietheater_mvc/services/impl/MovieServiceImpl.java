@@ -1,5 +1,6 @@
 package com.movietheater.movietheater_mvc.services.impl;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +60,8 @@ public class MovieServiceImpl implements MovieService {
            movieDTO.setDirector(movie.getDirector());
            movieDTO.setDuration(movie.getDuration());
            movieDTO.setVersion(movie.getVersion());
+           movieDTO.setContent(movie.getContent());
+           movieDTO.setLargeImage(movie.getLargeImage());
            return movieDTO;
        }).toList();
 
@@ -178,6 +181,8 @@ public class MovieServiceImpl implements MovieService {
         movie.setVersion(movieCreateDTO.getVersion());
         movie.setLargeImage(movieCreateDTO.getLargeImage());
         movie.setContent(movieCreateDTO.getContent());
+
+        movie.generateShowDates();
 
         if(movieCreateDTO.getTypeName() != null && !movieCreateDTO.getTypeName().isEmpty()) {
             var existingTypes = typeRepository.findAll();
@@ -441,6 +446,17 @@ public class MovieServiceImpl implements MovieService {
         var isDeleted = movieRepository.findById(id).orElse(null) == null;
         return isDeleted;
     }
+
+    @Override
+    public List<Movie> getMoviesByShowDate(LocalDate showDate) {
+        return movieRepository.findByShowDate(showDate);
+    }
+
+    @Override
+    public List<Movie> getMoviesByTypeName(String typeName) {
+        return movieRepository.findByTypeName(typeName);
+    }
+
    
 
 }

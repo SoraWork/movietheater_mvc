@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.movietheater.movietheater_mvc.dtos.auth.RegisterDTO;
 import com.movietheater.movietheater_mvc.entities.Account;
+import com.movietheater.movietheater_mvc.entities.Member;
 import com.movietheater.movietheater_mvc.repositories.AccountRepository;
+import com.movietheater.movietheater_mvc.repositories.MemberRepository;
 import com.movietheater.movietheater_mvc.repositories.RoleRepository;
 import com.movietheater.movietheater_mvc.services.AuthService;
 import com.movietheater.movietheater_mvc.services.impl.util.CustomUserDetails;
@@ -28,8 +30,10 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final MemberRepository memberRepository;
 
-    public AuthServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AuthServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
@@ -60,6 +64,12 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         user.setRole(role);
 
         accountRepository.save(user);
+
+        var member = new Member();
+        member.setScore(0);
+        member.setAccount(user);
+
+        memberRepository.save(member);
 
         return user.getId();
     }

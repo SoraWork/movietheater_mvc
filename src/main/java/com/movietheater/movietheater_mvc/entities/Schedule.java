@@ -1,5 +1,6 @@
 package com.movietheater.movietheater_mvc.entities;
 
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,5 +23,9 @@ public class Schedule {
 
     @ManyToMany(mappedBy = "schedules", fetch = FetchType.LAZY)
     private Set<Movie> movies;
+
+    public LocalTime getScheduleTimeAsLocalTime() {
+        return LocalTime.parse(this.scheduleTime);
+    }
 
 }

@@ -1,30 +1,52 @@
-<header layout:fragment="header" class="bg-blue-500 flex justify-between items-center text-white px-4">
+<header layout:fragment="header" class="bg-gray-800 flex justify-between items-center text-gray-200 px-4">
     <a th:href="@{/}" class="nav-brand text-2xl font-bold">Movie Theater App</a>
     <nav>
         <ul class="flex justify-center items-center">
             <li>
-                <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/}">Home</a>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/}">Home</a>
             </li>
             <li>
-                <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/manage/employees}"
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/showtime}">Showtime</a>
+            </li>
+            <li class="relative group">
+                <a class="nav-link inline-block p-4 hover:bg-gray-700 rounded-md" th:href="@{/}">Movies</a>
+                
+                <!-- Sub-menu Grid Layout -->
+                <ul class="absolute left-1/2 transform -translate-x-1/2 top-full mt-0 hidden group-hover:grid bg-gray-700 text-gray-200 py-2 shadow-lg w-72 grid grid-cols-4 gap-2 text-center">
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/action}">Hành Động</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/psychology-18}">Tâm Lý 18+</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/animation}">Hoạt Hình</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/war}">Chiến Tranh</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/romance}">Lãng Mạn</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/adventure}">Phiêu Lưu</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/sentimental}">Tình Cảm</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/comedy}">Hài Hước</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/fiction}">Viễn Tưởng</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/knight-errant}">Kiếm Hiệp</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/horror}">Kinh Dị</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-600 rounded-md" th:href="@{/movietype/genre/music}">Âm Nhạc</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/manage/employees}"
                     sec:authorize="hasRole('ADMIN')">Management</a>
             </li>
             <li>
-                <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/about}">About</a>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/about}">About</a>
             </li>
             <li>
-                <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/contact}">Contact</a>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/contact}">Contact</a>
             </li>
         </ul>
     </nav>
     <div class="profile-menu">
         <div class="anonymous" sec:authorize="isAnonymous()">
-            <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/auth/login}">Login</a>
-            <a class="nav-link inline-block p-4 hover:bg-blue-700" th:href="@{/auth/register}">Register</a>
+            <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/auth/login}">Login</a>
+            <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/auth/register}">Register</a>
         </div>
         <div class="authenticated" sec:authorize="isAuthenticated()">
-            <span>Welcome,  <span sec:authentication="name" th:text="${#authentication.principal.name}"></span>
-            <a th:href="@{/logout}" class="nav-link inline-block p-4 hover:bg-blue-700">Logout</a>
+            <span>Welcome, <span sec:authentication="name" th:text="${#authentication.principal.name}"></span></span>
+            <a th:href="@{/logout}" class="nav-link inline-block p-4 hover:bg-gray-700">Logout</a>
         </div>
     </div>
 </header>

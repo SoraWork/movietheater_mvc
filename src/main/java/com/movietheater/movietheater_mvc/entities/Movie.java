@@ -64,4 +64,21 @@ public class Movie {
     @JoinTable(name = "movie_date", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "show_date_id"))
     private Set<ShowDate> showDates;
 
+    public void generateShowDates() {
+        if (fromDate != null && toDate != null) {
+            Set<ShowDate> showDates = new HashSet<>();
+    
+            // Duyệt qua từng ngày từ fromDate đến toDate
+            for (LocalDate date = fromDate; !date.isAfter(toDate); date = date.plusDays(1)) {
+                ShowDate showDate = new ShowDate();
+                showDate.setShowDate(date);
+                showDate.setDateName(date.getDayOfWeek().name());
+    
+                showDates.add(showDate);
+            }
+    
+            this.showDates = showDates; 
+        }
+    }
+
 }
