@@ -449,7 +449,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getMoviesByShowDate(LocalDate showDate) {
-        return movieRepository.findByShowDate(showDate);
+        var movies = movieRepository.findByShowDate(showDate);
+        System.out.println(movies);
+        return movies;
     }
 
     @Override

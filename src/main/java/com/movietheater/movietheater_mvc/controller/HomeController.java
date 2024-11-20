@@ -5,23 +5,22 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.movietheater.movietheater_mvc.entities.Movie;
 import com.movietheater.movietheater_mvc.entities.Schedule;
+import com.movietheater.movietheater_mvc.services.CinemaRoomService;
+import com.movietheater.movietheater_mvc.services.MemberService;
 import com.movietheater.movietheater_mvc.services.MovieService;
 import com.movietheater.movietheater_mvc.services.ShowDateService;
 
@@ -31,11 +30,9 @@ import com.movietheater.movietheater_mvc.services.ShowDateService;
 @RequestMapping("/")
 public class HomeController {
     private final MovieService movieService;
-     private final ShowDateService showDateService;
   
 
-    public HomeController(MovieService movieService, ShowDateService showDateService) {
-        this.showDateService = showDateService;
+    public HomeController(MovieService movieService, ShowDateService showDateService, CinemaRoomService cinemaRoomService, MemberService memberService) {
         this.movieService = movieService;
     }
     @GetMapping
@@ -43,13 +40,7 @@ public class HomeController {
        var movies = movieService.findAll();
        model.addAttribute("movies", movies);
         return "home/index";
-    }
-    @GetMapping("/movies/{id}")
-    public String showMovie(@PathVariable UUID id, Model model) {
-        var movie = movieService.findById(id);
-        model.addAttribute("movie", movie);
-        return "home/movie";
-    }
+    } 
 
     @GetMapping("about")
     public String about() {
@@ -63,41 +54,42 @@ public class HomeController {
 
     @GetMapping("/showtime")
     public String showtimes(Model model) {
+        // Tạo danh sách ngày chiếu (showDates)
         List<LocalDate> showDates = new ArrayList<>();
         LocalDate today = LocalDate.now();
         for (int i = 0; i < 3; i++) {
-            showDates.add(today.plusDays(i));
+            showDates.add(today.plusDays(i));  // Thêm các ngày chiếu vào danh sách
         }
 
+        // Tạo bản đồ các bộ phim theo từng ngày chiếu
         Map<LocalDate, Set<Movie>> moviesByDate = new LinkedHashMap<>();
         for (LocalDate date : showDates) {
             Set<Movie> uniqueMovies = new LinkedHashSet<>(movieService.getMoviesByShowDate(date));
-            moviesByDate.put(date, uniqueMovies);
+            moviesByDate.put(date, uniqueMovies);  // Lưu các bộ phim cho từng ngày chiếu
         }
 
-        // Chuyển formatter thành chuỗi đã định dạng ngày
+        // Định dạng lại danh sách các ngày chiếu theo định dạng đẹp
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy");
         List<String> formattedDates = showDates.stream()
                                                 .map(date -> date.format(formatter))
                                                 .collect(Collectors.toList());
 
-        // Sắp xếp scheduleTimes trong mỗi movie theo giờ
-        // Sắp xếp scheduleTimes trong mỗi movie theo giờ và lưu vào LinkedHashSet để duy trì thứ tự
+        // Sắp xếp lịch chiếu của từng bộ phim theo giờ
         for (Set<Movie> movies : moviesByDate.values()) {
             for (Movie movie : movies) {
                 Set<Schedule> sortedSchedules = movie.getSchedules().stream()
                     .sorted(Comparator.comparing(schedule -> LocalTime.parse(schedule.getScheduleTime())))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
-                movie.setSchedules(sortedSchedules); // Giữ kiểu dữ liệu Set nhưng đảm bảo thứ tự
+                movie.setSchedules(sortedSchedules);  // Cập nhật lại danh sách lịch chiếu của bộ phim
             }
         }
 
+        // Truyền các giá trị vào Model để sử dụng trong HTML
+        model.addAttribute("showDates", showDates);         // Ngày chiếu
+        model.addAttribute("moviesByDate", moviesByDate);   // Các bộ phim theo ngày
+        model.addAttribute("formattedDates", formattedDates);  // Ngày chiếu đã định dạng
 
-        model.addAttribute("showDates", showDates);
-        model.addAttribute("moviesByDate", moviesByDate);
-        model.addAttribute("formattedDates", formattedDates);
-
-        return "home/showtime";
+        return "home/showtime";  // Trả về tên trang view
     }
 
 }

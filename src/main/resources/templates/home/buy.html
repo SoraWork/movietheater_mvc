@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layouts/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <section layout:fragment="content" class="max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg w-full text-white">
+        <h1 class="text-3xl font-bold mb-4 text-center">Ticket Purchase Details</h1>
+
+        <!-- Movie Image -->
+        <div class="flex justify-center mb-6">
+            <img th:src="@{${ticket.movieDTO.largeImage}}" alt="Movie Image"
+                class="w-2/5 h-96 object-cover rounded-lg shadow-md">
+        </div>
+
+        <!-- Information of the Buyer -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-2">Buyer Information</h2>
+            <p><strong>Full Name:</strong> <span th:text="${member.account.fullName}">Full Name</span></p>
+            <p><strong>Email:</strong> <span th:text="${member.account.email}">Email</span></p>
+            <p><strong>Username:</strong> <span th:text="${member.account.username}">Username</span></p>
+            <p><strong>Phone Number:</strong> <span th:text="${member.account.phoneNumber}">Phone Number</span></p>
+        </section>
+
+        <hr class="border-gray-600 mb-8">
+
+        <!-- Ticket Information -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-2">Ticket Information</h2>
+            <p><strong>Movie:</strong> <span th:text="${ticket.movieDTO.movieNameVn}">Movie Name</span></p>
+            <p><strong>Director:</strong> <span th:text="${ticket.movieDTO.director}">Director</span></p>
+            <p><strong>Actor:</strong> <span th:text="${ticket.movieDTO.actor}">Actor</span></p>
+            <p><strong>Version:</strong> <span th:text="${ticket.movieDTO.version}">Version</span></p>
+        </section>
+
+        <hr class="border-gray-600 mb-8">
+
+        <!-- Showtime Information -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-2">Showtime</h2>
+            <p><strong>Schedule:</strong> <span th:text="${ticket.schedule}">Schedule</span></p>
+            <p><strong>Showtime:</strong> <span th:text="${ticket.time}">Showtime</span></p>
+        </section>
+
+        <hr class="border-gray-600 mb-8">
+
+        <!-- Seats and Total Price -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-2">Seats and Total Price</h2>
+            <p><strong>Selected Seats:</strong> <span th:text="${ticket.selectedSeats}">Seats</span></p>
+            <p><strong>Total Price:</strong> <span th:text="${ticket.totalPrice}">Total Price</span> VND</p>
+        </section>
+
+        <hr class="border-gray-600 mb-8">
+
+        <div class="flex justify-center">
+            <a href="#" onclick="window.history.back();" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">Back</a>
+        </div>
+
+        <form th:action="@{/movies/confirmbooking}" method="post">
+
+            <input type="text" name="movieId" th:value="${ticket.movieDTO.movieId}">
+            <input type="text" name="schedule" th:value="${ticket.schedule}">
+            <input type="text" name="time" th:value="${ticket.time}">
+            <input type="text" name="selectedSeats" th:value="${ticket.selectedSeats}">
+            <input type="text" name="totalPrice" th:value="${ticket.totalPrice}">
+
+            <div class="flex justify-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">Confirm</button>
+            </div>
+
+        </form>
+
+    </section>
+</body>
+
+</html>

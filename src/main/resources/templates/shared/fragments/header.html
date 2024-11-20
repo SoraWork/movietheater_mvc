@@ -32,6 +32,10 @@
                     sec:authorize="hasRole('ADMIN')">Management</a>
             </li>
             <li>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/manager/users/edit}"
+                    sec:authorize="hasRole('CUSTOMER')">Users Service</a>
+            </li>
+            <li>
                 <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/about}">About</a>
             </li>
             <li>
@@ -45,7 +49,14 @@
             <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/auth/register}">Register</a>
         </div>
         <div class="authenticated" sec:authorize="isAuthenticated()">
-            <span>Welcome, <span sec:authentication="name" th:text="${#authentication.principal.name}"></span></span>
+            <span sec:authorize="hasRole('CUSTOMER')">
+                <a>
+                    Welcome, <span th:text="${#authentication.principal.custommername}"></span>
+                </a>
+            </span>
+            <span sec:authorize="!hasRole('CUSTOMER')">
+                Welcome, <span th:text="${#authentication.principal.custommername}"></span>
+            </span>
             <a th:href="@{/logout}" class="nav-link inline-block p-4 hover:bg-gray-700">Logout</a>
         </div>
     </div>

@@ -215,6 +215,28 @@ public class CinemaRoomServiceImpl implements CinemaRoomService {
         }
     }
 
+    @Override
+    public CinemaRoomDTO findByRoomName(String cinemaRoomName) {
+        var cinemaRoom = cinemaRoomRepository.findByCinemaRoomName(cinemaRoomName);
+        if (cinemaRoom == null) {
+            return null;
+        }
+        var CinemaRoomDTO = new CinemaRoomDTO();
+        CinemaRoomDTO.setId(cinemaRoom.getId());
+        CinemaRoomDTO.setCinemaRoomName(cinemaRoom.getCinemaRoomName());
+        CinemaRoomDTO.setSeatQuantity(cinemaRoom.getSeatQuantity());
+        return CinemaRoomDTO;
+    }
+
+    @Override
+    public List<Seat> getSeatsByCinemaRoomName(String cinemaRoomName) {
+        var cinemaRoom = cinemaRoomRepository.findByCinemaRoomName(cinemaRoomName);
+        if (cinemaRoom == null) {
+            return null;
+        }
+        return new ArrayList<>(cinemaRoom.getSeats());
+    }
+
     
 
 }

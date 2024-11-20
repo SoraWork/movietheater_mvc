@@ -17,6 +17,8 @@ public interface CinemaRoomService {
 
     CinemaRoomDTO findById(UUID id);
 
+    CinemaRoomDTO findByRoomName(String cinemaRoomName);
+
     CinemaRoomDTO create(CinemaRoomCreateDTO cinemaRoomCreateDTO);
 
     CinemaRoomDTO update(UUID id, CinemaRoomDTO cinemaRoomDTO);
@@ -24,6 +26,8 @@ public interface CinemaRoomService {
     boolean deleteById(UUID id);
 
     List<Seat> getSeatsByCinemaRoomId(UUID cinemaRoomId);
+
+    List<Seat> getSeatsByCinemaRoomName(String cinemaRoomName);
 
     Boolean updateSeatTypes(List<Seat> selectedSeatsList);
 

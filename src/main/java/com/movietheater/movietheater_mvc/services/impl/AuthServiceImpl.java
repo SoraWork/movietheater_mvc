@@ -91,7 +91,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
                 .collect(Collectors.toSet());
     
         System.out.println(grantedAuthorities);
-        return new CustomUserDetails(account.getFullName(), account.getPassword(), grantedAuthorities);
+        return new CustomUserDetails(account.getUsername(),account.getFullName(), account.getPassword(), grantedAuthorities);
     }
     
 }

@@ -179,42 +179,42 @@ public class CinemaRoomController {
         return "manage/cinemarooms/detail"; // Tên view hiển thị chi tiết phòng chiếu
     }
     @PostMapping("/{id}")
-public String handleSelectedSeats(@PathVariable UUID id,
-                                   @RequestParam("selectedSeats") String selectedSeats,
-                                   Model model,
-                                   RedirectAttributes redirectAttributes) {
-    // Tách các ID ghế đã chọn thành danh sách
-    String[] seatIds = selectedSeats.split(",");
+    public String handleSelectedSeats(@PathVariable UUID id,
+                                    @RequestParam("selectedSeats") String selectedSeats,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+        // Tách các ID ghế đã chọn thành danh sách
+        String[] seatIds = selectedSeats.split(",");
 
-    // Tạo danh sách ghế rỗng để lưu trữ đối tượng Seat
-    List<Seat> selectedSeatsList = new ArrayList<>();
+        // Tạo danh sách ghế rỗng để lưu trữ đối tượng Seat
+        List<Seat> selectedSeatsList = new ArrayList<>();
 
-    // Lặp qua từng ID để lấy ghế từ cơ sở dữ liệu
-    for (String seatId : seatIds) {
-        if (!seatId.isEmpty()) { // Kiểm tra không phải chuỗi rỗng
-            // Tìm ghế trong cơ sở dữ liệu bằng ID
-            Seat existingSeat = seatRepository.findById(UUID.fromString(seatId))
-                    .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
+        // Lặp qua từng ID để lấy ghế từ cơ sở dữ liệu
+        for (String seatId : seatIds) {
+            if (!seatId.isEmpty()) { // Kiểm tra không phải chuỗi rỗng
+                // Tìm ghế trong cơ sở dữ liệu bằng ID
+                Seat existingSeat = seatRepository.findById(UUID.fromString(seatId))
+                        .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
 
-            // Thêm ghế đã tìm thấy vào danh sách
-            selectedSeatsList.add(existingSeat);
+                // Thêm ghế đã tìm thấy vào danh sách
+                selectedSeatsList.add(existingSeat);
+            }
         }
+
+        // Tiến hành xử lý danh sách ghế được chọn, ví dụ: cập nhật cơ sở dữ liệu
+        boolean result = cinemaRoomService.updateSeatTypes(selectedSeatsList); // Cập nhật trạng thái ghế
+
+        // Kiểm tra kết quả cập nhật
+        if (result == false) {
+            var errorMessage = new Message("error", "Failed to update seat types");
+            model.addAttribute("message", errorMessage);
+            return "manage/cinemarooms/create"; // Quay lại trang tạo phòng chiếu
+        }
+
+        var successMessage = new Message("success", "Seat types updated successfully");
+        redirectAttributes.addFlashAttribute("message", successMessage);
+        
+        return "redirect:/manage/cinemarooms"; 
     }
-
-    // Tiến hành xử lý danh sách ghế được chọn, ví dụ: cập nhật cơ sở dữ liệu
-    boolean result = cinemaRoomService.updateSeatTypes(selectedSeatsList); // Cập nhật trạng thái ghế
-
-    // Kiểm tra kết quả cập nhật
-    if (result == false) {
-        var errorMessage = new Message("error", "Failed to update seat types");
-        model.addAttribute("message", errorMessage);
-        return "manage/cinemarooms/create"; // Quay lại trang tạo phòng chiếu
-    }
-
-    var successMessage = new Message("success", "Seat types updated successfully");
-    redirectAttributes.addFlashAttribute("message", successMessage);
-    
-    return "redirect:/manage/cinemarooms"; 
-}
 
 }

@@ -8,60 +8,221 @@
 </head>
 
 <body>
-    <section layout:fragment="content" class="movie max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg flex gap-6 justify-between">
-        <!-- Movie Image -->
-        <div class="movie-image w-2/5">
-            <img th:src="@{${movie.largeImage}}" alt="Movie Image" class="w-full h-full object-cover rounded-lg shadow-md">
-        </div>
-
-        <!-- Movie Details -->
-        <div class="movie-details w-3/5 space-y-5">
-            
-            <!-- Title and Subtitles -->
-            <div class="movie-title">
-                <h1 class="text-3xl text-white font-bold mb-2" th:text="${movie.movieNameEnglish}"></h1>
-                <h2 class="text-xl text-gray-400" th:text="${movie.movieNameVn}"></h2>
+    <section layout:fragment="content" class="movie max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg w-full">
+        <!-- Section 2: Movie Image and Movie Details -->
+        <section class="movie-details-section flex gap-6">
+            <!-- Movie Image -->
+            <div class="movie-image w-2/5">
+                <img th:src="@{${movie.largeImage}}" alt="Movie Image"
+                    class="w-full h-full object-cover rounded-lg shadow-md">
             </div>
 
-            <!-- Actor and Movie Info -->
-            <div class="movie-info flex items-center gap-4 my-3 text-gray-300">
-                <div class="movie-info-item flex items-center">
-                    <i class="fas fa-user mr-2"></i>
-                    <span th:text="${movie.actor}"></span>
+            <!-- Movie Details -->
+            <div class="movie-details w-3/5 space-y-5">
+                <!-- Title and Subtitles -->
+                <div class="movie-title">
+                    <h1 class="text-3xl text-white font-bold mb-2" th:text="${movie.movieNameEnglish}"></h1>
+                    <h2 class="text-xl text-gray-400" th:text="${movie.movieNameVn}"></h2>
+                </div>
+
+                <!-- Actor and Movie Info -->
+                <div class="movie-info flex items-center gap-4 my-3 text-gray-300">
+                    <div class="movie-info-item flex items-center">
+                        <i class="fas fa-user mr-2"></i>
+                        <span th:text="${movie.actor}"></span>
+                    </div>
+                </div>
+
+                <!-- Movie Type -->
+                <div class="movie-type">
+                    <h2 class="text-xl text-white font-semibold mb-2">Genres</h2>
+                    <div class="flex gap-2 text-gray-400 flex-wrap max-h-30 overflow-y-auto">
+                        <a th:each="type : ${movie.types}"
+                            th:href="@{/movietype/genre/{type.typeName}(type.typeName=${type.typeName})}"
+                            class="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
+                            <span th:text="${type.typeName}"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Movie Description -->
+                <div class="movie-description">
+                    <h2 class="text-xl text-white font-semibold mb-2">Synopsis</h2>
+                    <p class="text-gray-300 leading-relaxed" th:utext="${movie.content}"></p>
+                </div>
+
+                <!-- Movie Schedule -->
+                <div id="movie-schedule" class="movie-schedule"
+                    th:style="${scheduleTime != 'defaultTime'} ? 'display: none;' : ''">
+                    <h2 class="text-xl text-white font-semibold mb-2">Showtimes</h2>
+                    <div class="flex gap-3 text-gray-400 flex-wrap max-h-24 overflow-y-auto">
+                        <a th:each="schedule : ${movie.schedules}" href="#"
+                            th:attr="onclick='showSelectedTime(' + '\'' + ${schedule.scheduleTime} + '\'' + '); return false;'"
+                            class="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
+                            <span th:text="${schedule.scheduleTime}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Selected Showtime Display and Cinema Room -->
+        <section class="showtime-cinema-section mt-6 w-full">
+            <!-- Selected Showtime Display -->
+            <div id="selected-time" class="text-white mt-4 text-lg text-center"
+                th:style="${scheduleTime == 'defaultTime'} ? 'display: none;' : ''">
+                <span th:text="'Showtime: ' + ${scheduleTime}"></span>
+                <span id="selected-time-text"></span>
+            </div>
+
+            <!-- Cinema Room and Seat Information -->
+            <div id="cinema-room-seats" class="mt-6" th:classappend="${scheduleTime == 'defaultTime'} ? 'hidden' : ''">
+                <h2 class="text-2xl text-white font-bold mb-4 text-center"
+                    th:text="'Seat detail: ' + ${cinema.cinemaRoomName}"></h2>
+
+                <div class="flex justify-center">
+                    <div class="mr-8">
+                        <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
+                            <!-- Vòng lặp cho các ghế ở cột A, B, C -->
+                            <button type="button" th:each="seat : ${seats}" 
+                                th:if="${seat.seatRow == row && (seat.seatColumn == 'A' || seat.seatColumn == 'B' || seat.seatColumn == 'C')}"
+                                th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
+                                + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')} "
+                                th:text="${seat.seatRow + seat.seatColumn}"
+                                th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
+                                onclick="selectSeat(this)">
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
+                            <!-- Vòng lặp cho các ghế ở cột D, E, F -->
+                            <button type="button" th:each="seat : ${seats}" 
+                                th:if="${seat.seatRow == row && (seat.seatColumn == 'D' || seat.seatColumn == 'E' || seat.seatColumn == 'F')}"
+                                th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
+                                + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')}"
+                                th:text="${seat.seatRow + seat.seatColumn}"
+                                th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
+                                onclick="selectSeat(this)">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center font-bold text-white mt-6 mb-4">Screen</div>
+                <div class="flex justify-center items-center space-x-4 mb-6">
+                    <span class="w-10 h-10 bg-gray-300 rounded-md inline-block"></span> <span class="text-white">Seat
+                        Normal</span>
+                    <span class="w-10 h-10 bg-blue-400 rounded-md inline-block"></span> <span class="text-white">Seat
+                        VIP</span>
                 </div>
             </div>
 
-            <!-- Movie Type -->
-            <div class="movie-type">
-                <h2 class="text-xl text-white font-semibold mb-2">Genres</h2>
-                <div class="flex gap-2 text-gray-400 flex-wrap max-h-30 overflow-y-auto">
-                    <a th:each="type : ${movie.types}" th:href="@{/movietype/genre/{type.typeName}(type.typeName=${type.typeName})}" 
-                    class="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
-                        <span th:text="${type.typeName}"></span>
-                    </a>
+            <form th:action="@{/movies/buy}" method="post" id="seatForm"
+                th:classappend="${scheduleTime == 'defaultTime'} ? 'hidden' : ''"
+                class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <!-- Selected Seats -->
+                <input type="hidden" name="movieId" th:value="${movie.movieId}">
+                <input type="text" name="time" id="selectedDay" th:value="${date}">
+                <input type="text" name="schedule" id="selectedTime" th:value="${scheduleTime}"> 
+
+                <div class="form-group mb-4">
+                    <label for="selectedSeats" class="block text-lg font-medium text-gray-300 mb-2">Ghế đã chọn:</label>
+                    <input type="text" id="selectedSeats" name="selectedSeats"
+                        class="form-control w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        readonly>
                 </div>
-            </div>
-
-
-
-            <!-- Movie Schedule -->
-            <div class="movie-schedule">
-                <h2 class="text-xl text-white font-semibold mb-2">Showtimes</h2>
-                <div class="flex gap-3 text-gray-400 flex-wrap max-h-24 overflow-y-auto">
-                    <a th:each="schedule : ${movie.schedules}" th:href="@{/schedule/{schedule.scheduleTime}(schedule.scheduleTime=${schedule.scheduleTime})}"
-                    class="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
-                        <span th:text="${schedule.scheduleTime}"></span>
-                    </a>
+                <!-- Total Price -->
+                <div class="form-group mb-4">
+                    <label for="totalPrice" class="block text-lg font-medium text-gray-300 mb-2">Tổng tiền:</label>
+                    <input type="text" name="totalPrice" id="totalPrice"
+                        class="form-control w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        readonly>
                 </div>
-            </div>
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full p-3 bg-green-500 text-white text-lg font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-400">
+                    Xác nhận và Thanh toán
+                </button>
+            </form>
+        </section>
 
+        <script>
+            // Giá ghế
+            const SEAT_PRICES = {
+                normal: 50000, // Giá ghế thường
+                vip: 100000    // Giá ghế VIP
+            };
 
-            <!-- Movie Description -->
-            <div class="movie-description">
-                <h2 class="text-xl text-white font-semibold mb-2">Synopsis</h2>
-                <p class="text-gray-300 leading-relaxed" th:utext="${movie.content}"></p>
-            </div>
-        </div>
+            function showSelectedTime(time) {
+                const selectedTimeElement = document.getElementById("selected-time");
+                const selectedTimeText = document.getElementById("selected-time-text");
+                const seatForm = document.getElementById("seatForm");
+
+                if (time) {
+                    selectedTimeText.innerText = time;
+                    selectedTimeElement.style.display = "block";
+
+                    // Cập nhật giá trị của input time
+                    document.getElementById("selectedTime").value = time;
+
+                    // Hiển thị form
+                    seatForm.classList.remove("hidden");
+                } else {
+                    selectedTimeText.innerText = "";
+                    selectedTimeElement.style.display = "none";
+
+                    // Ẩn form
+                    seatForm.classList.add("hidden");
+                }
+
+                document.getElementById("movie-schedule").style.display = "none";
+                document.getElementById("cinema-room-seats").classList.remove("hidden");
+            }
+            function selectSeat(button) {
+    if (button.classList.contains('bg-green-400')) {
+        // Bỏ chọn ghế
+        button.classList.remove('bg-green-400');
+        button.classList.add('bg-gray-300');
+    } else {
+        // Chọn ghế
+        button.classList.remove('bg-gray-300');
+        button.classList.add('bg-green-400');
+    }
+
+    // Lấy thông tin ghế
+    const seatId = button.getAttribute('data-id');
+    const seatText = button.innerText;
+    const seatType = button.classList.contains('bg-blue-400') ? 'vip' : 'normal'; // Xác định loại ghế
+
+    // Cập nhật danh sách ghế đã chọn
+    updateSelectedSeats(seatId, seatText, button.classList.contains('bg-green-400'), seatType);
+}
+
+function updateSelectedSeats(id, seatText, isSelected, seatType) {
+    const selectedSeatsInput = document.getElementById('selectedSeats');
+    const totalPriceInput = document.getElementById('totalPrice');
+    let selectedSeats = selectedSeatsInput.value.split(',').filter(Boolean);
+    let totalPrice = parseInt(totalPriceInput.value || '0', 10);
+
+    if (isSelected) {
+        if (!selectedSeats.includes(seatText)) {
+            selectedSeats.push(seatText);
+            // Cộng giá ghế vào tổng
+            totalPrice += SEAT_PRICES[seatType];
+        }
+    } else {
+        selectedSeats = selectedSeats.filter(seat => seat !== seatText);
+        // Trừ giá ghế khỏi tổng
+        totalPrice -= SEAT_PRICES[seatType];
+    }
+
+    // Cập nhật giá trị input
+    selectedSeatsInput.value = selectedSeats.join(',');
+    totalPriceInput.value = totalPrice;
+}
+        </script>
     </section>
 </body>
 

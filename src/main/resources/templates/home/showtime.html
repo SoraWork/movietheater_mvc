@@ -85,7 +85,10 @@
                                 <!-- Schedule Times -->
                                 <div class="flex flex-wrap gap-2">
                                     <th:block th:each="schedule : ${movie.schedules}">
-                                        <button class="schedule-button" th:text="${schedule.scheduleTime}"></button>
+                                        <a class="schedule-button" 
+                                           th:text="${schedule.scheduleTime}" 
+                                           th:href="@{/movies/{id}(id=${movie.movieId}, time=${schedule.scheduleTime}, date=${entry.key})}">
+                                        </a>
                                     </th:block>
                                 </div>
                             </div>

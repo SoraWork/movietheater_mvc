@@ -1,8 +1,11 @@
-package com.movietheater.movietheater_mvc.dtos.employee;
+package com.movietheater.movietheater_mvc.dtos.member;
 
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
+
+import com.movietheater.movietheater_mvc.dtos.auth.AccountDTO;
+
 import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Past;
@@ -18,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDTO {
+public class MemberDTO {
 
     private UUID id;
 
@@ -55,5 +58,7 @@ public class EmployeeDTO {
 
     @NotBlank
     private String phoneNumber;
+
+    private AccountDTO account;
 
 }

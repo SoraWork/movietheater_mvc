@@ -118,8 +118,9 @@ public class EmployeeController {
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable UUID id,
             @ModelAttribute @Valid EmployeeDTO employeeDTO,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
-            BindingResult bindingResult, Model model) {
+            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeDTO", employeeDTO);
             return "manage/employees/edit";
