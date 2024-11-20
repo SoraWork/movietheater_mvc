@@ -2,12 +2,14 @@ package com.movietheater.movietheater_mvc.services.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.movietheater.movietheater_mvc.entities.Invoice;
+import com.movietheater.movietheater_mvc.entities.Schedule;
 import com.movietheater.movietheater_mvc.entities.ScheduleSeat;
 import com.movietheater.movietheater_mvc.entities.Ticket;
 import com.movietheater.movietheater_mvc.repositories.AccountRepository;
@@ -100,9 +102,21 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<ScheduleSeat> getSeatsByScheduleId(UUID scheduleId) {
-        return scheduleSeatRepository.findByScheduleId(scheduleId);
+    public List<ScheduleSeat> findAvailableSeatsByMovieAndDate(UUID movieId, LocalDate date, String scheduleTime) {
+        // Tạo scheduleId từ thông tin movieId và scheduleTime
+        UUID scheduleId = getScheduleIdByMovieAndTime(movieId, date, scheduleTime);
+
+        // Truy vấn các ghế đã được đặt cho lịch chiếu này
+        return scheduleSeatRepository.findByMovieIdAndScheduleId(movieId, scheduleId);
     }
+
+    @Override
+    public UUID getScheduleIdByMovieAndTime(UUID movieId, LocalDate date, String scheduleTime) {
+        return null;
+    }
+
+
+    
 
 
 }

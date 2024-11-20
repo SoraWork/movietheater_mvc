@@ -49,9 +49,6 @@ public class Movie {
     @Column(name = "LARGE_IMAGE")
     private String largeImage;
 
-    @Column(name = "SMALL_IMAGE")
-    private String smallImage;
-
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "movie_schedule", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "schedule_id"))
     private Set<Schedule> schedules;

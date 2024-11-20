@@ -38,17 +38,11 @@ public class Account {
     @Column(name = "IDENTITY_CARD")
     private String identityCard;
 
-    @Column(name = "IMAGE")
-    private String image;
-
     @Column(name = "PASSWORD")
     private String password;
 
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
-
-    @Column(name = "REGISTER_DATE")
-    private LocalDate registerDate;
 
     @Column(name = "STATUS")
     private int status;

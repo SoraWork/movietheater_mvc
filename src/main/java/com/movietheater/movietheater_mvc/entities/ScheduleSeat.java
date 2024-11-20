@@ -1,4 +1,5 @@
 package com.movietheater.movietheater_mvc.entities;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -22,8 +23,8 @@ public class ScheduleSeat {
     @Column(name = "SCHEDULE_ID")
     private UUID scheduleId;
 
-    @Column(name = "SEAT_ID")
-    private UUID seatId;
+    @Column(name = "SEAT_DATE")
+    private LocalDate seatDate;
 
     @Column(name = "SEAT_COLUMN")
     private String seatColumn;
