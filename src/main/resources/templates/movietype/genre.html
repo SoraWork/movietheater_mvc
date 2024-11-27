@@ -9,19 +9,19 @@
 
 <body>
     <section layout:fragment="content" class="text-center">
-        <h1 class="text-2xl text-white">Movies in Genre</h1>
+        <h1 class="text-2xl text-white">List Movie Today</h1>
 
-        <!-- Danh sách phim -->
-        <div class="movie-list flex flex-wrap justify-start gap-4 p-4">
-            <div class="card w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-3" th:each="movie : ${movies}">
-                <img th:src="@{${movie.largeImage}}" alt="Movie Image" class="w-full h-50 object-cover rounded-lg">
-                <div class="card-body">
-                    <h2 class="text-xl text-white font-bold" th:text="${movie.movieNameEnglish}"></h2>
-                    <a th:href="@{/movies/{id}(id=${movie.movieId})}"
-                        class="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-full block mt-2">View Movie</a>
-                </div>
+       <!-- Danh sách phim -->
+       <div class="movie-list flex flex-wrap justify-center items-start gap-4 p-4">
+        <div class="card w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-3" th:each="movie : ${movies}">
+            <img th:src="@{${movie.largeImage}}" alt="Movie Image" class="w-full h-50 object-cover rounded-lg">
+            <div class="card-body">
+                <h2 class="text-xl text-white font-bold" th:text="${movie.movieNameEnglish}"></h2>
+                <a th:href="@{/movies/{id}(id=${movie.movieId})}"
+                    class="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-full block mt-2">View Movie</a>
             </div>
         </div>
+    </div>
     </section>
 </body>
 

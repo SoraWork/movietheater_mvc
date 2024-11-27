@@ -1,21 +1,26 @@
 <aside th:fragment="sidebar" class="w-[250px] border-r border-slate-300 shadow-md">
     <div class="menu-header border-b border-slate-300 text-2xl font-semibold p-3">
-        <i class="fa-solid fa-gauge-high me-3"></i> Management
+        <i class="fa-solid fa-sliders me-3"></i> Management
     </div>
     <ul class="menu-list">
         <li class="menu-item">
             <a th:href="@{/manage/employees}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-list me-2"></i> Employees
+                <i class="fa-solid fa-users me-2"></i> Employees
             </a>
         </li>
         <li class="menu-item">
             <a th:href="@{/manage/movies}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-carrot me-2"></i> Movies
+                <i class="fa-solid fa-film me-2"></i> Movies
             </a>
         </li>
         <li class="menu-item">
             <a th:href="@{/manage/cinemarooms}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-carrot me-2"></i> Cinema Rooms
+                <i class="fa-solid fa-door-open me-2"></i> Cinema Rooms
+            </a>
+        </li>
+        <li class="menu-item">
+            <a th:href="@{/manage/tickets}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
+                <i class="fa-solid fa-ticket me-2"></i> Booking Manager
             </a>
         </li>
     </ul>

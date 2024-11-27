@@ -8,6 +8,5 @@ import com.movietheater.movietheater_mvc.entities.ScheduleSeat;
 
 public interface BookingService {
     boolean bookTickets(UUID movieId, String selectedSeats, int totalPrice, String schedule, String time, String username);
-    List<ScheduleSeat> findAvailableSeatsByMovieAndDate(UUID movieId, LocalDate date, String scheduleTime);
-    UUID getScheduleIdByMovieAndTime(UUID movieId, LocalDate date, String scheduleTime);
+    List<ScheduleSeat> findBookedSeatsByMovieAndScheduleAndDate(UUID movieId, String scheduleTime, LocalDate seatDate);
 }

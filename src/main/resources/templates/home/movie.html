@@ -83,28 +83,27 @@
                 <div class="flex justify-center">
                     <div class="mr-8">
                         <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
-                            <!-- Vòng lặp cho các ghế ở cột A, B, C -->
-                            <button type="button" th:each="seat : ${seats}" 
+                            <button type="button" th:each="seat : ${seats}"
                                 th:if="${seat.seatRow == row && (seat.seatColumn == 'A' || seat.seatColumn == 'B' || seat.seatColumn == 'C')}"
                                 th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
-                                + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')} "
-                                th:text="${seat.seatRow + seat.seatColumn}"
-                                th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
-                                onclick="selectSeat(this)">
+    + (seatStatusMap[seat.seatRow + seat.seatColumn] ? 'bg-red-500' : (seat.seatType ? 'bg-blue-400' : 'bg-gray-300'))}"
+                                th:text="${seat.seatRow + seat.seatColumn}" th:data-row="${seat.seatRow}"
+                                th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" onclick="selectSeat(this)"
+                                th:disabled="${seatStatusMap[seat.seatRow + seat.seatColumn]}">
                             </button>
                         </div>
                     </div>
-                    
+
                     <div>
                         <div th:each="row : ${#numbers.sequence(1, 10)}" class="flex justify-center mb-2">
-                            <!-- Vòng lặp cho các ghế ở cột D, E, F -->
-                            <button type="button" th:each="seat : ${seats}" 
+                            <button type="button" th:each="seat : ${seats}"
                                 th:if="${seat.seatRow == row && (seat.seatColumn == 'D' || seat.seatColumn == 'E' || seat.seatColumn == 'F')}"
                                 th:class="${'w-10 h-10 flex items-center justify-center rounded-md text-sm font-semibold mx-1 text-white ' 
-                                + (seat.seatType ? 'bg-blue-400' : 'bg-gray-300')}"
-                                th:text="${seat.seatRow + seat.seatColumn}"
-                                th:data-row="${seat.seatRow}" th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" 
-                                onclick="selectSeat(this)">
+                            + (seatStatusMap[seat.seatRow + seat.seatColumn] ? 'bg-red-500' : (seat.seatType ? 'bg-blue-400' : 'bg-gray-300'))}"
+                                th:text="${seat.seatRow + seat.seatColumn}" th:data-row="${seat.seatRow}"
+                                th:data-column="${seat.seatColumn}" th:data-id="${seat.id}" onclick="selectSeat(this)"
+                                th:disabled="${seatStatusMap[seat.seatRow + seat.seatColumn]}"></button>>
+
                             </button>
                         </div>
                     </div>
@@ -124,8 +123,8 @@
                 class="bg-gray-800 p-6 rounded-lg shadow-lg">
                 <!-- Selected Seats -->
                 <input type="hidden" name="movieId" th:value="${movie.movieId}">
-                <input type="text" name="time" id="selectedDay" th:value="${date}">
-                <input type="text" name="schedule" id="selectedTime" th:value="${scheduleTime}"> 
+                <input type="hidden" name="time" id="selectedDay" th:value="${date}">
+                <input type="hidden" name="schedule" id="selectedTime" th:value="${scheduleTime}">
 
                 <div class="form-group mb-4">
                     <label for="selectedSeats" class="block text-lg font-medium text-gray-300 mb-2">Ghế đã chọn:</label>
@@ -181,47 +180,53 @@
                 document.getElementById("cinema-room-seats").classList.remove("hidden");
             }
             function selectSeat(button) {
-    if (button.classList.contains('bg-green-400')) {
-        // Bỏ chọn ghế
-        button.classList.remove('bg-green-400');
-        button.classList.add('bg-gray-300');
-    } else {
-        // Chọn ghế
-        button.classList.remove('bg-gray-300');
-        button.classList.add('bg-green-400');
-    }
+                // Kiểm tra xem ghế đã được chọn chưa
+                if (button.classList.contains('bg-red-500')) {
+                    // Nếu ghế đã được chọn, không cho phép chọn lại
+                    return;
+                }
 
-    // Lấy thông tin ghế
-    const seatId = button.getAttribute('data-id');
-    const seatText = button.innerText;
-    const seatType = button.classList.contains('bg-blue-400') ? 'vip' : 'normal'; // Xác định loại ghế
+                if (button.classList.contains('bg-green-400')) {
+                    // Bỏ chọn ghế
+                    button.classList.remove('bg-green-400');
+                    button.classList.add('bg-gray-300');
+                } else {
+                    // Chọn ghế
+                    button.classList.remove('bg-gray-300');
+                    button.classList.add('bg-green-400');
+                }
 
-    // Cập nhật danh sách ghế đã chọn
-    updateSelectedSeats(seatId, seatText, button.classList.contains('bg-green-400'), seatType);
-}
+                // Lấy thông tin ghế
+                const seatId = button.getAttribute('data-id');
+                const seatText = button.innerText;
+                const seatType = button.classList.contains('bg-blue-400') ? 'vip' : 'normal'; // Xác định loại ghế
 
-function updateSelectedSeats(id, seatText, isSelected, seatType) {
-    const selectedSeatsInput = document.getElementById('selectedSeats');
-    const totalPriceInput = document.getElementById('totalPrice');
-    let selectedSeats = selectedSeatsInput.value.split(',').filter(Boolean);
-    let totalPrice = parseInt(totalPriceInput.value || '0', 10);
+                // Cập nhật danh sách ghế đã chọn
+                updateSelectedSeats(seatId, seatText, button.classList.contains('bg-green-400'), seatType);
+            }
 
-    if (isSelected) {
-        if (!selectedSeats.includes(seatText)) {
-            selectedSeats.push(seatText);
-            // Cộng giá ghế vào tổng
-            totalPrice += SEAT_PRICES[seatType];
-        }
-    } else {
-        selectedSeats = selectedSeats.filter(seat => seat !== seatText);
-        // Trừ giá ghế khỏi tổng
-        totalPrice -= SEAT_PRICES[seatType];
-    }
+            function updateSelectedSeats(id, seatText, isSelected, seatType) {
+                const selectedSeatsInput = document.getElementById('selectedSeats');
+                const totalPriceInput = document.getElementById('totalPrice');
+                let selectedSeats = selectedSeatsInput.value.split(',').filter(Boolean);
+                let totalPrice = parseInt(totalPriceInput.value || '0', 10);
 
-    // Cập nhật giá trị input
-    selectedSeatsInput.value = selectedSeats.join(',');
-    totalPriceInput.value = totalPrice;
-}
+                if (isSelected) {
+                    if (!selectedSeats.includes(seatText)) {
+                        selectedSeats.push(seatText);
+                        // Cộng giá ghế vào tổng
+                        totalPrice += SEAT_PRICES[seatType];
+                    }
+                } else {
+                    selectedSeats = selectedSeats.filter(seat => seat !== seatText);
+                    // Trừ giá ghế khỏi tổng
+                    totalPrice -= SEAT_PRICES[seatType];
+                }
+
+                // Cập nhật giá trị input
+                selectedSeatsInput.value = selectedSeats.join(',');
+                totalPriceInput.value = totalPrice;
+            }
         </script>
     </section>
 </body>

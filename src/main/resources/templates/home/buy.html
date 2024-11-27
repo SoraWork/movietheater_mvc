@@ -22,7 +22,6 @@
             <h2 class="text-2xl font-semibold mb-2">Buyer Information</h2>
             <p><strong>Full Name:</strong> <span th:text="${member.account.fullName}">Full Name</span></p>
             <p><strong>Email:</strong> <span th:text="${member.account.email}">Email</span></p>
-            <p><strong>Username:</strong> <span th:text="${member.account.username}">Username</span></p>
             <p><strong>Phone Number:</strong> <span th:text="${member.account.phoneNumber}">Phone Number</span></p>
         </section>
 
@@ -57,19 +56,18 @@
 
         <hr class="border-gray-600 mb-8">
 
-        <div class="flex justify-center">
-            <a href="#" onclick="window.history.back();" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">Back</a>
-        </div>
+
 
         <form th:action="@{/movies/confirmbooking}" method="post">
 
-            <input type="text" name="movieId" th:value="${ticket.movieDTO.movieId}">
-            <input type="text" name="schedule" th:value="${ticket.schedule}">
-            <input type="text" name="time" th:value="${ticket.time}">
-            <input type="text" name="selectedSeats" th:value="${ticket.selectedSeats}">
-            <input type="text" name="totalPrice" th:value="${ticket.totalPrice}">
+            <input type="hidden" name="movieId" th:value="${ticket.movieDTO.movieId}">
+            <input type="hidden" name="schedule" th:value="${ticket.schedule}">
+            <input type="hidden" name="time" th:value="${ticket.time}">
+            <input type="hidden" name="selectedSeats" th:value="${ticket.selectedSeats}">
+            <input type="hidden" name="totalPrice" th:value="${ticket.totalPrice}">
 
             <div class="flex justify-center">
+                <a href="#" onclick="window.history.back();" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">Back</a>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">Confirm</button>
             </div>
 

@@ -1,5 +1,6 @@
 package com.movietheater.movietheater_mvc.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,8 +15,10 @@ import com.movietheater.movietheater_mvc.entities.ScheduleSeat;
 public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat, UUID>{
     List<ScheduleSeat> findByMovieIdAndScheduleId(UUID movieId, UUID scheduleId);
 
-    @Query("SELECT ss FROM ScheduleSeat ss WHERE ss.movieId = :movieId AND ss.scheduleId IN :scheduleIds")
-    List<ScheduleSeat> findByMovieIdAndScheduleIds(
-            @Param("movieId") UUID movieId,
-            @Param("scheduleIds") List<UUID> scheduleIds);
+  @Query("SELECT s FROM ScheduleSeat s WHERE s.movieId = :movieId AND s.scheduleId IN " +
+       "(SELECT sch.id FROM Schedule sch WHERE sch.scheduleTime = :scheduleTime) AND s.seatDate = :seatDate")
+    List<ScheduleSeat> findBookedSeatsByMovieAndScheduleAndDate(
+            @Param("movieId") UUID movieId, 
+            @Param("scheduleTime") String scheduleTime, 
+            @Param("seatDate") LocalDate seatDate);
 }

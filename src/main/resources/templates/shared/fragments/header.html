@@ -28,8 +28,8 @@
                 </ul>
             </li>
             <li>
-                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/manage/employees}"
-                    sec:authorize="hasRole('ADMIN')">Management</a>
+                <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/manage/tickets}" 
+                   sec:authorize="hasRole('ADMIN') or hasRole('EMPLOYEE')">Management</a>
             </li>
             <li>
                 <a class="nav-link inline-block p-4 hover:bg-gray-700" th:href="@{/manager/users/edit}"

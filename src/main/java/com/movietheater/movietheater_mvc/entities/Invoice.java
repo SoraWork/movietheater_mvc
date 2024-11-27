@@ -41,8 +41,19 @@ public class Invoice {
 
     @Column(name = "SEAT")
     private String seat;
+
+    @Column(name = "STATUS")
+    private boolean status;
     
     @ManyToOne
     @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "id")
     private Account account;
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }

@@ -18,11 +18,9 @@ public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecific
 
     Movie findByMovieNameVn(String movieNameVn);
 
-    // Tìm các bộ phim theo ngày chiếu
     @Query("SELECT m FROM Movie m JOIN m.showDates sd WHERE sd.showDate = :showDate")
     List<Movie> findByShowDate(@Param("showDate") LocalDate showDate);
 
-    // Tìm các bộ phim theo tên của thể loại
     @Query("SELECT m FROM Movie m JOIN m.types t WHERE t.typeName = :typeName")
     List<Movie> findByTypeName(@Param("typeName") String typeName);
 

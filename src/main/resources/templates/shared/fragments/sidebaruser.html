@@ -1,21 +1,16 @@
 <aside th:fragment="sidebaruser" class="w-[250px] border-r border-slate-300 shadow-md">
     <div class="menu-header border-b border-slate-300 text-2xl font-semibold p-3">
-        <i class="fa-solid fa-gauge-high me-3"></i> Management
+        <i class="fa-solid fa-sliders me-3"></i> Management
     </div>
     <ul class="menu-list">
         <li class="menu-item">
             <a th:href="@{/manager/users/edit}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-list me-2"></i> Account Information
+                <i class="fa-solid fa-user me-2"></i> Account Information
             </a>
         </li>
         <li class="menu-item">
-            <a th:href="@{/manager/users/edit}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-carrot me-2"></i> History
-            </a>
-        </li>
-        <li class="menu-item">
-            <a th:href="@{/manager/users/edit}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
-                <i class="fa-solid fa-carrot me-2"></i> Booked List
+            <a th:href="@{/manager/histories}" class="menu-link block p-3 hover:bg-blue-500 hover:text-white">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i> History
             </a>
         </li>
     </ul>

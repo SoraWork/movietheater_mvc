@@ -46,7 +46,8 @@ public class MovieController {
     private final TypeRepository typeRepository;
     private final ScheduleRepository scheduleRepository;
 
-    public MovieController(MovieService movieService, CinemaRoomService cinemaRoomService, TypeRepository typeRepository, ScheduleRepository scheduleRepository) {
+    public MovieController(MovieService movieService, CinemaRoomService cinemaRoomService,
+            TypeRepository typeRepository, ScheduleRepository scheduleRepository) {
         this.typeRepository = typeRepository;
         this.scheduleRepository = scheduleRepository;
         this.cinemaRoomService = cinemaRoomService;
@@ -56,8 +57,8 @@ public class MovieController {
     @GetMapping
     public String index(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false, defaultValue = "movieNameEnglish") String sortBy, // Xac dinh truong sap xep
-            @RequestParam(required = false, defaultValue = "asc") String order, // Xac dinh chieu sap xep
+            @RequestParam(required = false, defaultValue = "movieNameEnglish") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String order,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size,
             Model model) {
@@ -107,21 +108,19 @@ public class MovieController {
         return "manage/movies/index";
     }
 
-
-
     @GetMapping("/create")
     public String create(Model model) {
         var movieCreateDTO = new MovieCreateDTO();
         model.addAttribute("movieCreateDTO", movieCreateDTO);
 
-        var cinemarooms=cinemaRoomService.findAll();
+        var cinemarooms = cinemaRoomService.findAll();
         model.addAttribute("cinemarooms", cinemarooms);
 
-        var types=typeRepository.findAll();
+        var types = typeRepository.findAll();
         model.addAttribute("types", types);
 
-        var schedules=scheduleRepository.findAll();
-        schedules.sort(Comparator.comparing(Schedule::getScheduleTime));  
+        var schedules = scheduleRepository.findAll();
+        schedules.sort(Comparator.comparing(Schedule::getScheduleTime));
         model.addAttribute("schedules", schedules);
 
         return "manage/movies/create";
@@ -136,13 +135,13 @@ public class MovieController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("movieCreateDTO", movieCreateDTO);
 
-            var cinemarooms=cinemaRoomService.findAll();
+            var cinemarooms = cinemaRoomService.findAll();
             model.addAttribute("cinemarooms", cinemarooms);
 
-            var types=typeRepository.findAll();
+            var types = typeRepository.findAll();
             model.addAttribute("types", types);
 
-            var schedules=scheduleRepository.findAll();
+            var schedules = scheduleRepository.findAll();
             model.addAttribute("schedules", schedules);
             return "manage/movies/create";
         }
@@ -166,18 +165,19 @@ public class MovieController {
                         + originalFileName.substring(originalFileName.lastIndexOf("."));
                 Path path = Paths.get(folder.toString(), fileName);
                 Files.write(path, bytes);
-                movieCreateDTO.setLargeImage(folder.toString().replace("src\\main\\resources\\static", "") + "/" + fileName);
+                movieCreateDTO
+                        .setLargeImage(folder.toString().replace("src\\main\\resources\\static", "") + "/" + fileName);
             } catch (Exception e) {
                 e.printStackTrace();
                 Message errorMessage = new Message("error", "Failed to upload image");
                 model.addAttribute("message", errorMessage);
-                var cinemarooms=cinemaRoomService.findAll();
+                var cinemarooms = cinemaRoomService.findAll();
                 model.addAttribute("cinemarooms", cinemarooms);
-    
-                var types=typeRepository.findAll();
+
+                var types = typeRepository.findAll();
                 model.addAttribute("types", types);
-    
-                var schedules=scheduleRepository.findAll();
+
+                var schedules = scheduleRepository.findAll();
                 model.addAttribute("schedules", schedules);
 
                 bindingResult.rejectValue("image", "image", "Failed to upload image");
@@ -191,13 +191,13 @@ public class MovieController {
             var errorMessage = new Message("error", "Failed to create movie");
             model.addAttribute("message", errorMessage);
 
-            var cinemarooms=cinemaRoomService.findAll();
+            var cinemarooms = cinemaRoomService.findAll();
             model.addAttribute("cinemarooms", cinemarooms);
 
-            var types=typeRepository.findAll();
+            var types = typeRepository.findAll();
             model.addAttribute("types", types);
 
-            var schedules=scheduleRepository.findAll();
+            var schedules = scheduleRepository.findAll();
             model.addAttribute("schedules", schedules);
             return "manage/movies/create";
         }
@@ -207,29 +207,28 @@ public class MovieController {
         return "redirect:/manage/movies";
     }
 
-
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable UUID id, Model model) {
         var movieDTO = movieService.findById(id);
         List<String> typeNames = movieDTO.getTypes().stream()
-        .map(TypeDTO::getTypeName)
-        .collect(Collectors.toList());
+                .map(TypeDTO::getTypeName)
+                .collect(Collectors.toList());
         model.addAttribute("selectedTypeNames", typeNames);
 
         model.addAttribute("movieDTO", movieDTO);
 
-        var cinemarooms=cinemaRoomService.findAll();
+        var cinemarooms = cinemaRoomService.findAll();
         model.addAttribute("cinemarooms", cinemarooms);
 
-        var types=typeRepository.findAll();
+        var types = typeRepository.findAll();
         model.addAttribute("types", types);
 
-        var schedules=scheduleRepository.findAll();
+        var schedules = scheduleRepository.findAll();
         List<String> scheduleTimes = movieDTO.getSchedules().stream()
-            .map(ScheduleDTO::getScheduleTime)
-            .collect(Collectors.toList());
+                .map(ScheduleDTO::getScheduleTime)
+                .collect(Collectors.toList());
         model.addAttribute("selectedScheduleTimes", scheduleTimes);
-        schedules.sort(Comparator.comparing(Schedule::getScheduleTime));  
+        schedules.sort(Comparator.comparing(Schedule::getScheduleTime));
         model.addAttribute("schedules", schedules);
 
         return "manage/movies/edit";
@@ -245,13 +244,13 @@ public class MovieController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("movieDTO", movieDTO);
 
-            var cinemarooms=cinemaRoomService.findAll();
+            var cinemarooms = cinemaRoomService.findAll();
             model.addAttribute("cinemarooms", cinemarooms);
 
-            var types=typeRepository.findAll();
+            var types = typeRepository.findAll();
             model.addAttribute("types", types);
 
-            var schedules=scheduleRepository.findAll();
+            var schedules = scheduleRepository.findAll();
             model.addAttribute("schedules", schedules);
 
             return "manage/movies/edit";
@@ -286,13 +285,13 @@ public class MovieController {
                 Message errorMessage = new Message("error", "Failed to upload image");
                 model.addAttribute("message", errorMessage);
 
-                var cinemarooms=cinemaRoomService.findAll();
+                var cinemarooms = cinemaRoomService.findAll();
                 model.addAttribute("cinemarooms", cinemarooms);
-    
-                var types=typeRepository.findAll();
+
+                var types = typeRepository.findAll();
                 model.addAttribute("types", types);
-    
-                var schedules=scheduleRepository.findAll();
+
+                var schedules = scheduleRepository.findAll();
                 model.addAttribute("schedules", schedules);
 
                 bindingResult.rejectValue("image", "image", "Failed to upload image");
@@ -306,13 +305,13 @@ public class MovieController {
             var errorMessage = new Message("error", "Failed to update movie");
             model.addAttribute("message", errorMessage);
 
-            var cinemarooms=cinemaRoomService.findAll();
-                model.addAttribute("cinemarooms", cinemarooms);
-    
-            var types=typeRepository.findAll();
+            var cinemarooms = cinemaRoomService.findAll();
+            model.addAttribute("cinemarooms", cinemarooms);
+
+            var types = typeRepository.findAll();
             model.addAttribute("types", types);
-    
-            var schedules=scheduleRepository.findAll();
+
+            var schedules = scheduleRepository.findAll();
             model.addAttribute("schedules", schedules);
 
             return "manage/movies/edit";
@@ -323,6 +322,7 @@ public class MovieController {
         redirectAttributes.addFlashAttribute("message", successMessage);
         return "redirect:/manage/movies";
     }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         var result = movieService.deleteById(id);

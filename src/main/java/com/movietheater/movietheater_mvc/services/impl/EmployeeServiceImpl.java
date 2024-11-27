@@ -67,17 +67,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         public Page<EmployeeDTO> findAll(String keyword, Pageable pageable) {
             Page<Employee> employees;
 
-            // Kiểm tra nếu từ khóa tìm kiếm rỗng hoặc không tồn tại
             if (keyword == null || keyword.trim().isEmpty()) {
-                // Thực hiện truy vấn mà không có điều kiện tìm kiếm
+             
                 employees = employeeRepository.findAll(pageable);
             } else {
-                // Tạo Specification khi có từ khóa tìm kiếm
+              
                 Specification<Employee> specification = (root, query, criteriaBuilder) -> {
-                    // Thực hiện Join với bảng Account
+                  
                     Join<Employee, Account> accountJoin = root.join("account", JoinType.LEFT);
 
-                    // Tạo Predicate cho email và identityCard
+                 
                     Predicate emailPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(accountJoin.get("email")), "%" + keyword.toLowerCase() + "%"
                     );
@@ -86,15 +85,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                         criteriaBuilder.lower(accountJoin.get("identityCard")), "%" + keyword.toLowerCase() + "%"
                     );
 
-                    // Trả về điều kiện kết hợp OR
+                  
                     return criteriaBuilder.or(emailPredicate, identityCardPredicate);
                 };
 
-                // Thực hiện truy vấn với Specification và phân trang
+               
                 employees = employeeRepository.findAll(specification, pageable);
             }
 
-            // Chuyển đổi Page<Employee> sang Page<EmployeeDTO>
+           
             return employees.map(employee -> {
                 EmployeeDTO employeeDTO = new EmployeeDTO();
                 employeeDTO.setId(employee.getId());
@@ -270,12 +269,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Page<EmployeeDTO> findAll(Pageable pageable) {
-        // Truy vấn tất cả các Employee với phân trang
+        
         Page<Employee> employees = employeeRepository.findAll(pageable);
     
-        // Chuyển đổi Page<Employee> thành Page<EmployeeDTO>
+    
         return employees.map(employee -> {
-            // Tạo một đối tượng EmployeeDTO và thiết lập các thuộc tính
+           
             EmployeeDTO employeeDTO = new EmployeeDTO();
             employeeDTO.setId(employee.getId());
             employeeDTO.setUsername(employee.getAccount().getUsername());

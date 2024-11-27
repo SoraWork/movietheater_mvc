@@ -2,7 +2,6 @@ package com.movietheater.movietheater_mvc.controller;
 
 import java.util.*;
 
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -25,13 +24,14 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/manage/employees")
-public class EmployeeController {  
+public class EmployeeController {
 
     private final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
+
     @GetMapping
     public String index(
             @RequestParam(required = false) String keyword,
@@ -39,44 +39,34 @@ public class EmployeeController {
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size,
             Model model) {
-    
-        // Xác định phân trang
-        Pageable pageable = PageRequest.of(page, size); // Không cần sắp xếp
-    
-        // Kiểm tra từ khóa và gọi phương thức phù hợp
-        var employees = (keyword == null || keyword.trim().isEmpty()) ?
-                employeeService.findAll(pageable) : // Không có từ khóa -> tìm tất cả
-                employeeService.findAll(keyword, pageable); // Có từ khóa -> tìm kiếm với điều kiện
-    
-        // Thêm danh sách nhân viên vào Model
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        var employees = (keyword == null || keyword.trim().isEmpty()) ? employeeService.findAll(pageable)
+                : employeeService.findAll(keyword, pageable);
+
         model.addAttribute("employees", employees);
-    
-        // Thêm các thuộc tính vào Model để sử dụng trong view
-        // Passing keyword to view
+
         model.addAttribute("keyword", keyword);
-        
-        // Passing total pages to view
+
         model.addAttribute("totalPages", employees.getTotalPages());
-        // Passing total elements to view
+
         model.addAttribute("totalElements", employees.getTotalElements());
-        // Limit page
-        model.addAttribute("pageLimit", 3); 
-        // Passing current page to view
+
+        model.addAttribute("pageLimit", 3);
+
         model.addAttribute("page", page);
-        // Passing current size to view
+
         model.addAttribute("pageSize", size);
-          // Passing pageSizes to view
-        model.addAttribute("pageSizes", new Integer[] {5, 10, 15, 20, 25});
-    
-        // Thêm message vào Model nếu chưa có
+
+        model.addAttribute("pageSizes", new Integer[] { 5, 10, 15, 20, 25 });
+
         if (!model.containsAttribute("message")) {
             model.addAttribute("message", new Message());
         }
-    
-        // Trả về tên của view
+
         return "manage/employees/index";
     }
-
 
     @GetMapping("/create")
     public String create(Model model) {
@@ -86,7 +76,7 @@ public class EmployeeController {
         return "manage/employees/create";
     }
 
-     @PostMapping("/create")
+    @PostMapping("/create")
     public String create(@Valid @ModelAttribute EmployeeCreateDTO employeeCreateDTO,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
@@ -108,6 +98,7 @@ public class EmployeeController {
         redirectAttributes.addFlashAttribute("message", successMessage);
         return "redirect:/manage/employees";
     }
+
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable UUID id, Model model) {
         var employeeDTO = employeeService.findById(id);
@@ -115,6 +106,7 @@ public class EmployeeController {
 
         return "manage/employees/edit";
     }
+
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable UUID id,
             @ModelAttribute @Valid EmployeeDTO employeeDTO,
@@ -139,6 +131,7 @@ public class EmployeeController {
         redirectAttributes.addFlashAttribute("message", successMessage);
         return "redirect:/manage/employees";
     }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         var result = employeeService.deleteById(id);
