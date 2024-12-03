@@ -98,4 +98,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setStatus(status);
         invoiceRepository.save(invoice);
     }
+
+    @Override
+    public boolean deleteById(UUID id) {
+         // Check if entity exists
+         var invoice = invoiceRepository.findById(id).orElse(null);
+         // Check if entity is null then return false
+         if (invoice == null) {
+             return false;
+         }
+         // Delete entity
+         invoiceRepository.delete(invoice);
+         // Check if entity is deleted
+         var isDeleted = invoiceRepository.findById(id).orElse(null) == null;
+         return isDeleted;
+    }
 }

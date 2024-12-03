@@ -1,52 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{shared/layouts/authLayout}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Đăng ký</title>
 </head>
 
 <body>
     <section layout:fragment="content"
         class="w-1/3 bg-white p-4 rounded-md shadow-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <h1 class="text-2xl font-bold text-center">Register</h1>
+        <h1 class="text-2xl font-bold text-center">Đăng ký</h1>
         <form th:action="@{/auth/register}" method="post" th:object="${registerDTO}">
             <div class="form-group mb-3">
-                <label for="username" class="block text-sm font-medium text-gray-700">User Name</label>
+                <label for="username" class="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
                 <input type="text" id="username" name="username"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{username}">
             </div>
             <div class="form-group mb-3">
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
                 <input type="password" id="password" name="password"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{password}">
             </div>
             <div class="form-group mb-3">
-                <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <label for="fullName" class="block text-sm font-medium text-gray-700">Họ và tên</label>
                 <input type="text" id="fullName" name="fullName"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{fullName}">
             </div>
             <div class="form-group mb-3">
-                <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Date Of Birth</label>
+                <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Ngày sinh</label>
                 <input type="date" id="dateOfBirth" name="dateOfBirth"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{dateOfBirth}">
             </div>
             
             <div class="form-group mb-3">
-                <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                <label for="gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
                 <input type="text" id="gender" name="gender"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{gender}">
             </div>
 
             <div class="form-group mb-3">
-                <label for="identityCard" class="block text-sm font-medium text-gray-700">Identity Card</label>
+                <label for="identityCard" class="block text-sm font-medium text-gray-700">CMND/CCCD</label>
                 <input type="text" id="identityCard" name="identityCard"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{identityCard}">
@@ -58,13 +58,13 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
                 <input type="text" id="address" name="address"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{address}">
             </div>
             <div class="form-group mb-3">
-                <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
                 <input type="text" id="phoneNumber" name="phoneNumber"
                     class="form-control w-full p-2 border border-slate-300 mt-1" required autofocus
                     th:field="*{phoneNumber}">
@@ -72,14 +72,14 @@
             
             <div class="form-group mb-3 flex justify-between items-center gap-2">
                 <a th:href="@{/}"
-                    class="bg-white w-1/4 block p-2 text-slate-950 rounded-md border border-slate-300 text-center hover:bg-slate-500 hover:text-white">Home</a>
+                    class="bg-white w-1/4 block p-2 text-slate-950 rounded-md border border-slate-300 text-center hover:bg-slate-500 hover:text-white">Trang chủ</a>
                 <button type="submit"
-                    class="bg-blue-500 w-3/4 text-white p-2 rounded-md border border-blue-500 hover:bg-blue-600">Register</button>
+                    class="bg-blue-500 w-3/4 text-white p-2 rounded-md border border-blue-500 hover:bg-blue-600">Đăng ký</button>
             </div>
 
             <div class="form-group text-right">
-                <span>Already have an account? <a th:href="@{/auth/login}"
-                        class="text-blue-500 hover:text-blue-700">Login</a></span>
+                <span>Bạn đã có tài khoản? <a th:href="@{/auth/login}"
+                        class="text-blue-500 hover:text-blue-700">Đăng nhập</a></span>
             </div>
         </form>
     </section>

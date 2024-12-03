@@ -125,7 +125,6 @@ public class BookingController {
         UUID movieUuid = UUID.fromString(movieId);
 
         String currentUsername = userDetails.getUsername();
-        Member member = memberService.findByUsername(currentUsername);
 
         boolean success = bookingService.bookTickets(movieUuid, selectedSeats, totalPrice, schedule, time,
                 currentUsername);
@@ -136,7 +135,7 @@ public class BookingController {
             model.addAttribute("message", "Booking failed!");
         }
 
-        return "home/bookingConfirmation";
+        return "redirect:/manager/histories";
     }
 
 }

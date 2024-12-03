@@ -20,4 +20,7 @@ public interface InvoiceService {
 
     void updateStatus(UUID invoiceId, boolean status);
 
+    boolean deleteById(UUID id);
+
+
 }

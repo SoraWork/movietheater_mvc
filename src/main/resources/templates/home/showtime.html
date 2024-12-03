@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layouts/layout}">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layouts/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Showtimes</title>
+    <title>Lịch Chiếu</title>
     <style>
         /* Cập nhật màu của button và nền */
         .schedule-button {
             padding: 0.5rem 1rem;
-            border: 1px solid #4b5563; /* Màu xám đậm */
+            border: 1px solid #4b5563;
             border-radius: 8px;
-            background-color: #6b7280; /* Màu xám trung bình để phù hợp với nền */
-            color: #f3f4f6; /* Màu chữ trắng xám nhạt */
+            background-color: #6b7280;
+            color: #f3f4f6;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .schedule-button:hover {
-            background-color: #9ca3af; /* Màu xám nhạt hơn khi hover */
-            color: #1f2937; /* Màu chữ tối hơn khi hover */
+            background-color: #9ca3af;
+            color: #1f2937;
         }
 
         .movie-section {
             display: flex;
             gap: 1.5rem;
             padding: 1rem 0;
-            border-bottom: 1px solid #374151; /* Đường viền màu xám đậm hơn để phân cách */
+            border-bottom: 1px solid #374151;
         }
 
         .movie-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #f3f4f6; /* Màu chữ trắng xám nhạt */
+            color: #f3f4f6;
         }
 
         .movie-info {
-            color: #d1d5db; /* Màu xám nhạt */
+            color: #d1d5db;
             margin-bottom: 0.5rem;
         }
     </style>
@@ -54,35 +54,35 @@
 </head>
 <body>
     <section layout:fragment="content" class="movie max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold mb-6 text-gray-200 text-center">Showtimes</h2>
+        <h2 class="text-2xl font-semibold mb-6 text-gray-200 text-center">Lịch Chiếu</h2>
         
-        <!-- Date Selection Buttons -->
+        <!-- Nút chọn ngày -->
         <div class="flex gap-4 mb-6 justify-center">
             <th:block th:each="showDate, iterStat : ${showDates}">
                 <button 
                     th:id="'btn-' + ${showDate}"
-                    th:attr="onclick='showMoviesForDate(' + '\'' + ${showDate} + '\'' + ')'"
+                    th:attr="onclick='showMoviesForDate(' + '\'' + ${showDate} + '\'' + ')' "
                     th:text="${formattedDates[iterStat.index]}"
                     class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md">
                 </button>
             </th:block>
         </div>
         
-        <!-- Movie Sections for Each Date -->
+        <!-- Danh sách phim cho từng ngày -->
         <div class="space-y-6">
             <th:block th:each="entry : ${moviesByDate}">
                 <div class="movies-for-date" th:id="'movies-' + ${entry.key.toString()}" style="display: none;">
                     <th:block th:each="movie : ${entry.value}">
                         <div class="movie-section">
-                            <!-- Movie Image -->
+                            <!-- Ảnh Phim -->
                             <div>
-                                <img th:src="${movie.largeImage}" alt="Movie Image" class="w-24 h-auto rounded-lg shadow-md">
+                                <img th:src="${movie.largeImage}" alt="Ảnh Phim" class="w-24 h-auto rounded-lg shadow-md">
                             </div>
-                            <!-- Movie Details -->
+                            <!-- Thông Tin Phim -->
                             <div class="flex-grow">
                                 <h3 th:text="${movie.movieNameVn}" class="movie-title"></h3>
                                 <p th:text="${movie.movieNameEnglish}" class="movie-info"></p>
-                                <!-- Schedule Times -->
+                                <!-- Giờ Chiếu -->
                                 <div class="flex flex-wrap gap-2">
                                     <th:block th:each="schedule : ${movie.schedules}">
                                         <a class="schedule-button" 

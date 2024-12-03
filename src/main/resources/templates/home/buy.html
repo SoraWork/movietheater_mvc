@@ -1,65 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layouts/layout}">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{shared/layouts/layout}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Chi Tiết Đặt Vé</title>
 </head>
 
 <body>
     <section layout:fragment="content" class="max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg w-full text-white">
-        <h1 class="text-3xl font-bold mb-4 text-center">Ticket Purchase Details</h1>
+        <h1 class="text-3xl font-bold mb-4 text-center">Chi Tiết Đặt Vé</h1>
 
-        <!-- Movie Image -->
+        <!-- Hình ảnh phim -->
         <div class="flex justify-center mb-6">
-            <img th:src="@{${ticket.movieDTO.largeImage}}" alt="Movie Image"
+            <img th:src="@{|${ticket.movieDTO.largeImage}|}" alt="Hình Ảnh Phim"
                 class="w-2/5 h-96 object-cover rounded-lg shadow-md">
         </div>
 
-        <!-- Information of the Buyer -->
+        <!-- Thông tin người mua -->
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-2">Buyer Information</h2>
-            <p><strong>Full Name:</strong> <span th:text="${member.account.fullName}">Full Name</span></p>
+            <h2 class="text-2xl font-semibold mb-2">Thông Tin Người Mua</h2>
+            <p><strong>Họ Tên:</strong> <span th:text="${member.account.fullName}">Họ Tên</span></p>
             <p><strong>Email:</strong> <span th:text="${member.account.email}">Email</span></p>
-            <p><strong>Phone Number:</strong> <span th:text="${member.account.phoneNumber}">Phone Number</span></p>
+            <p><strong>Số Điện Thoại:</strong> <span th:text="${member.account.phoneNumber}">Số Điện Thoại</span></p>
         </section>
 
         <hr class="border-gray-600 mb-8">
 
-        <!-- Ticket Information -->
+        <!-- Thông tin vé -->
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-2">Ticket Information</h2>
-            <p><strong>Movie:</strong> <span th:text="${ticket.movieDTO.movieNameVn}">Movie Name</span></p>
-            <p><strong>Director:</strong> <span th:text="${ticket.movieDTO.director}">Director</span></p>
-            <p><strong>Actor:</strong> <span th:text="${ticket.movieDTO.actor}">Actor</span></p>
-            <p><strong>Version:</strong> <span th:text="${ticket.movieDTO.version}">Version</span></p>
+            <h2 class="text-2xl font-semibold mb-2">Thông Tin Vé</h2>
+            <p><strong>Phim:</strong> <span th:text="${ticket.movieDTO.movieNameVn}">Tên Phim</span></p>
+            <p><strong>Đạo Diễn:</strong> <span th:text="${ticket.movieDTO.director}">Đạo Diễn</span></p>
+            <p><strong>Diễn Viên:</strong> <span th:text="${ticket.movieDTO.actor}">Diễn Viên</span></p>
+            <p><strong>Phiên Bản:</strong> <span th:text="${ticket.movieDTO.version}">Phiên Bản</span></p>
         </section>
 
         <hr class="border-gray-600 mb-8">
 
-        <!-- Showtime Information -->
+        <!-- Thông tin thời gian chiếu -->
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-2">Showtime</h2>
-            <p><strong>Schedule:</strong> <span th:text="${ticket.schedule}">Schedule</span></p>
-            <p><strong>Showtime:</strong> <span th:text="${ticket.time}">Showtime</span></p>
+            <h2 class="text-2xl font-semibold mb-2">Thông Tin Suất Chiếu</h2>
+            <p><strong>Ngày Chiếu:</strong> <span th:text="${ticket.schedule}">Ngày Chiếu</span></p>
+            <p><strong>Giờ Chiếu:</strong> <span th:text="${ticket.time}">Giờ Chiếu</span></p>
         </section>
 
         <hr class="border-gray-600 mb-8">
 
-        <!-- Seats and Total Price -->
+        <!-- Ghế ngồi và tổng tiền -->
         <section class="mb-8">
-            <h2 class="text-2xl font-semibold mb-2">Seats and Total Price</h2>
-            <p><strong>Selected Seats:</strong> <span th:text="${ticket.selectedSeats}">Seats</span></p>
-            <p><strong>Total Price:</strong> <span th:text="${ticket.totalPrice}">Total Price</span> VND</p>
+            <h2 class="text-2xl font-semibold mb-2">Ghế Ngồi Và Tổng Tiền</h2>
+            <p><strong>Ghế Đã Chọn:</strong> <span th:text="${ticket.selectedSeats}">Ghế Ngồi</span></p>
+            <p><strong>Tổng Tiền:</strong> <span th:text="${#numbers.formatDecimal(ticket.totalPrice, 0, 'COMMA', '.')}">Tổng Tiền</span> VND</p>
         </section>
 
         <hr class="border-gray-600 mb-8">
 
-
-
+        <!-- Nút hành động -->
         <form th:action="@{/movies/confirmbooking}" method="post">
-
             <input type="hidden" name="movieId" th:value="${ticket.movieDTO.movieId}">
             <input type="hidden" name="schedule" th:value="${ticket.schedule}">
             <input type="hidden" name="time" th:value="${ticket.time}">
@@ -67,12 +65,10 @@
             <input type="hidden" name="totalPrice" th:value="${ticket.totalPrice}">
 
             <div class="flex justify-center">
-                <a href="#" onclick="window.history.back();" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">Back</a>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">Confirm</button>
+                <a href="#" onclick="window.history.back();" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">Quay Lại</a>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">Xác Nhận</button>
             </div>
-
         </form>
-
     </section>
 </body>
 

@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="card-footer p-3 flex justify-between">
-                    <a th:href="@{/manage/employees/create}"
+                    <a th:href="@{/manage/employees/create}" sec:authorize="hasRole('ADMIN')"
                         class="p-2 px-4 bg-green-500 text-white rounded-full">Create</a>
                     <button type="submit" class="p-2 px-4 bg-blue-500 text-white rounded-full">Search</button>
                 </div>
@@ -46,7 +46,8 @@
                             <th>Identity Card</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Actions</th>
+                            <th sec:authorize="hasRole('ADMIN')">Actions</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -59,8 +60,8 @@
                             <td th:text="${employee.identityCard}">Identity Card</td>
                             <td th:text="${employee.phoneNumber}">Phone</td>
                             <td th:text="${employee.address}">Address</td>
-                            <td>
-                                <div class="action flex justify-center items-center gap-3">
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <div class="action flex justify-center items-center gap-3"  sec:authorize="hasRole('ADMIN')">
                                     <a th:href="@{/manage/employees/edit/{id}(id=${employee.id})}"
                                         class="btn btn-sm btn-primary">
                                         <i class="fa-solid fa-edit text-blue-500"></i>

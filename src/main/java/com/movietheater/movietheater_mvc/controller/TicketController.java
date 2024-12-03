@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.movietheater.movietheater_mvc.entities.Invoice;
 import com.movietheater.movietheater_mvc.services.InvoiceService;
 
@@ -67,5 +66,7 @@ public class TicketController {
                 + "&page=" + page
                 + "&size=" + size;
     }
+
+    
 
 }

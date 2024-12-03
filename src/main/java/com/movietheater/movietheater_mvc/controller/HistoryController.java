@@ -9,10 +9,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.movietheater.movietheater_mvc.dtos.invoice.InvoiceDTO;
+import com.movietheater.movietheater_mvc.dtos.messages.Message;
 import com.movietheater.movietheater_mvc.entities.Member;
 import com.movietheater.movietheater_mvc.services.InvoiceService;
 import com.movietheater.movietheater_mvc.services.MemberService;
@@ -60,6 +63,20 @@ public class HistoryController {
         model.addAttribute("pageSizes", new Integer[] { 5, 10, 15, 20, 25 });
 
         return "manager/histories/index";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
+        var result = invoiceService.deleteById(id);
+
+        if (!result) {
+            var errorMessage = new Message("error", "Failed to delete employee");
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+        } else {
+            var successMessage = new Message("success", "employee deleted successfully");
+            redirectAttributes.addFlashAttribute("message", successMessage);
+        }
+        return "redirect:/manager/histories";
     }
 
 }

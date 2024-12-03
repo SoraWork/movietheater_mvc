@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="card-footer p-3 flex justify-between">
-                    <a th:href="@{/manage/movies/create}"
+                    <a th:href="@{/manage/movies/create}" sec:authorize="hasRole('ADMIN')"
                         class="p-2 px-4 bg-green-500 text-white rounded-full">Create</a>
                     <button type="submit" class="p-2 px-4 bg-blue-500 text-white rounded-full">Search</button>
                 </div>
@@ -48,19 +48,11 @@
                                 </a>
                             </th>
                             <th>Movie(VN)</th>
-                            <!-- <th>
-                                <a th:href="@{/manage/movies(keyword=${keyword}, sortBy=prepTime, order=${order == 'asc' ? 'desc' : 'asc'}, page=${page}, size=${pageSize})}"
-                                    class="text-blue-500 flex items-center gap-1">
-                                    Prep Time
-                                    <i
-                                        th:class="${sortBy == 'prepTime' and order == 'asc' ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid  fa-arrow-up-wide-short'}"></i>
-                                </a>
-                            </th> -->
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Duration</th>
                             <th>Version</th>
-                            <th>Actions</th>
+                            <th sec:authorize="hasRole('ADMIN')">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +64,7 @@
                             <td th:text="${#temporals.format(movie.toDate, 'MM/dd/yyyy')}"></td>
                             <td th:text="${movie.duration}"></td>
                             <td th:text="${movie.version}"></td>
-                            <td>
+                            <td sec:authorize="hasRole('ADMIN')">
                                 <div class="action flex justify-center items-center gap-3">
                                     <a th:href="@{/manage/movies/edit/{id}(id=${movie.movieId})}"
                                         class="btn btn-sm btn-primary">
