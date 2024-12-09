@@ -100,4 +100,9 @@ public class BookingServiceImpl implements BookingService {
         return scheduleSeatRepository.findBookedSeatsByMovieAndScheduleAndDate(movieId, scheduleTime, seatDate);
     }
 
+    @Override
+    public Invoice findInvoiceBySeatAndSchedule(String seatColumn, int seatRow, String scheduleTime, LocalDate date) {
+        return invoiceRepository.findInvoiceBySeatAndSchedule(seatColumn, seatRow, scheduleTime, date);
+    }
+
 }

@@ -63,10 +63,15 @@
                     </div>
                     <div class="form-group mb-3 w-100 px-2">
                         <label for="version" class="block text-sm font-medium text-gray-700 mb-2">Version</label>
-                        <input type="text" id="version" name="version"
-                            class="form-control w-full p-2 border border-slate-300 rounded-md" th:field="*{version}">
+                        <select id="version" name="version" 
+                                class="form-control w-full p-2 border border-slate-300 rounded-md" th:field="*{version}">
+                            <option value="" disabled selected>Select Version</option>
+                            <option value="2D" th:selected="${movieCreateDTO.version == '2D'}">2D</option>
+                            <option value="3D" th:selected="${movieCreateDTO.version == '3D'}">3D</option>
+                        </select>
                         <span th:if="${#fields.hasErrors('version')}" th:errors="*{version}" class="text-red-500"></span>
                     </div>
+                    
                     <div class="form-group mb-3 w-100 px-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Type:</label>
                         <div class="grid grid-cols-3 gap-2">

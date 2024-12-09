@@ -15,6 +15,7 @@ import com.movietheater.movietheater_mvc.entities.Movie;
 public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecificationExecutor<Movie>{
 
     Movie findByMovieNameEnglish(String movieNameEnglish);
+    List<Movie> findByToDateBefore(LocalDate date);
 
     Movie findByMovieNameVn(String movieNameVn);
 

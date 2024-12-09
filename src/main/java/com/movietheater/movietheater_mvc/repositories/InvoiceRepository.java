@@ -1,5 +1,6 @@
 package com.movietheater.movietheater_mvc.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,4 +28,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID>,JpaSpeci
            "LOWER(i.account.phoneNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Invoice> searchInvoices(@Param("keyword") String keyword, Pageable pageable);
 
+    @Query("SELECT i FROM Invoice i WHERE i.seat = CONCAT(:seatColumn, :seatRow) " +
+           "AND i.scheduleShowTime = :scheduleTime AND i.scheduleShow = :date")
+    Invoice findInvoiceBySeatAndSchedule(
+        @Param("seatColumn") String seatColumn,
+        @Param("seatRow") int seatRow,
+        @Param("scheduleTime") String scheduleTime,
+        @Param("date") LocalDate date);
 }

@@ -21,7 +21,7 @@
                         <label for="keyword" class="block mb-2">Keyword</label>
                         <input type="text" name="keyword" id="keyword"
                             class="form-control w-full p-2 border border-slate-300 rounded-md"
-                            placeholder="Search by keyword" th:value="${keyword}">
+                            placeholder="Search by name, Id card or phone number" th:value="${keyword}">
                     </div>
                 </div>
                 <div class="card-footer p-3 flex justify-between">
@@ -56,16 +56,11 @@
                             <td th:text="${invoice.scheduleShow + ' - ' + invoice.scheduleShowTime}"></td>
                             <td th:text="${invoice.seat}"></td>
                             <td>
-                                <form th:action="@{/manage/tickets/update-status}" method="post" style="display: inline;">
-                                    <input type="hidden" name="invoiceId" th:value="${invoice.id}" />
-                                    <input type="hidden" name="status" value="false" />
-                                    <input type="hidden" name="keyword" th:value="${keyword}" />
-                                    <input type="hidden" name="page" th:value="${page}" />
-                                    <input type="hidden" name="size" th:value="${pageSize}" />
+                               
                                     <button th:if="${invoice.status}" type="submit" class="p-2 px-4 bg-blue-500 text-white rounded-full">
                                         Successful booking
                                     </button>
-                                </form>
+                                
                                 <form th:action="@{/manage/tickets/update-status}" method="post" style="display: inline;">
                                     <input type="hidden" name="invoiceId" th:value="${invoice.id}" />
                                     <input type="hidden" name="status" value="true" />
